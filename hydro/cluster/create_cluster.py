@@ -47,7 +47,7 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
     # util.replace_yaml_val(env, 'AWS_ACCESS_KEY_ID', aws_key_id)
     # util.replace_yaml_val(env, 'AWS_SECRET_ACCESS_KEY', aws_key)
     # util.replace_yaml_val(env, 'KOPS_STATE_STORE', kops_bucket)
-    util.replace_yaml_val(env, 'HYDRO_CLUSTER_NAME', cluster_name)
+    # util.replace_yaml_val(env, 'HYDRO_CLUSTER_NAME', cluster_name)
 
     client.create_namespaced_pod(namespace=util.NAMESPACE, body=management_spec)
 
@@ -218,10 +218,14 @@ if __name__ == '__main__':
                         default=os.path.join(os.environ['HOME'],
                                              '.ssh/id_rsa'))
 
-    cluster_name = util.check_or_get_env_arg('HYDRO_CLUSTER_NAME')
-    kops_bucket = util.check_or_get_env_arg('KOPS_STATE_STORE')
-    aws_key_id = util.check_or_get_env_arg('AWS_ACCESS_KEY_ID')
-    aws_key = util.check_or_get_env_arg('AWS_SECRET_ACCESS_KEY')
+    # cluster_name = util.check_or_get_env_arg('HYDRO_CLUSTER_NAME')
+    # kops_bucket = util.check_or_get_env_arg('KOPS_STATE_STORE')
+    # aws_key_id = util.check_or_get_env_arg('AWS_ACCESS_KEY_ID')
+    # aws_key = util.check_or_get_env_arg('AWS_SECRET_ACCESS_KEY')
+    cluster_name = None
+    kops_bucket = None
+    aws_key_id = None
+    aws_key = None
 
     args = parser.parse_args()
 
