@@ -34,9 +34,9 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
         raise ValueError('HYDRO_HOME environment variable must be set to be '
                          + 'the directory where all Hydro project repos are '
                          + 'located.')
-    prefix = os.path.join(os.environ['HYDRO_HOME'], 'cluster/hydro/cluster')
+    prefix = os.path.join(os.environ['HYDRO_HOME'], 'hydro-cluster/hydro/cluster')
 
-    util.run_process(['./create_cluster_object.sh', kops_bucket, ssh_key])
+    # util.run_process(['./create_cluster_object.sh', kops_bucket, ssh_key])
 
     client, apps_client = util.init_k8s()
 
@@ -44,9 +44,9 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
     management_spec = util.load_yaml('yaml/pods/management-pod.yml', prefix)
     env = management_spec['spec']['containers'][0]['env']
 
-    util.replace_yaml_val(env, 'AWS_ACCESS_KEY_ID', aws_key_id)
-    util.replace_yaml_val(env, 'AWS_SECRET_ACCESS_KEY', aws_key)
-    util.replace_yaml_val(env, 'KOPS_STATE_STORE', kops_bucket)
+    # util.replace_yaml_val(env, 'AWS_ACCESS_KEY_ID', aws_key_id)
+    # util.replace_yaml_val(env, 'AWS_SECRET_ACCESS_KEY', aws_key)
+    # util.replace_yaml_val(env, 'KOPS_STATE_STORE', kops_bucket)
     util.replace_yaml_val(env, 'HYDRO_CLUSTER_NAME', cluster_name)
 
     client.create_namespaced_pod(namespace=util.NAMESPACE, body=management_spec)
@@ -55,20 +55,20 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
     # this because other pods depend on knowing the management pod's IP address.
     management_ip = util.get_pod_ips(client, 'role=management', is_running=True)[0]
 
-    # Create the NVidia kubernetes plugin DaemonSet that enables GPU accesses.
-    nvidia_ds_exists = True
-    try:
-        apps_client.read_namespaced_daemon_set('nvidia-device-plugin-daemonset', namespace='kube-system')
-    except: # Throws an error if the DS doesnt' exist.
-        nvidia_ds_exists = False
+    # # Create the NVidia kubernetes plugin DaemonSet that enables GPU accesses.
+    # nvidia_ds_exists = True
+    # try:
+    #     apps_client.read_namespaced_daemon_set('nvidia-device-plugin-daemonset', namespace='kube-system')
+    # except: # Throws an error if the DS doesnt' exist.
+    #     nvidia_ds_exists = False
 
-    if not nvidia_ds_exists:
-        os.system('wget https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/1.0.0-beta5/nvidia-device-plugin.yml > /dev/null 2>&1')
+    # if not nvidia_ds_exists:
+    #     os.system('wget https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/1.0.0-beta5/nvidia-device-plugin.yml > /dev/null 2>&1')
 
-        ds_spec = util.load_yaml('nvidia-device-plugin.yml')
-        apps_client.create_namespaced_daemon_set(namespace='kube-system', body=ds_spec)
+    #     ds_spec = util.load_yaml('nvidia-device-plugin.yml')
+    #     apps_client.create_namespaced_daemon_set(namespace='kube-system', body=ds_spec)
 
-        os.system('rm nvidia-device-plugin.yml')
+    #     os.system('rm nvidia-device-plugin.yml')
 
     # Copy kube config file to management pod, so it can execute kubectl
     # commands, in addition to SSH keys and KVS config.
@@ -100,6 +100,9 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
                           '/hydro/anna/conf/',
                           mon_spec['spec']['containers'][0]['name'])
     os.system('rm anna-config.yml')
+    
+    # 1st Try
+    exit()
 
     print('Creating %d routing nodes...' % (route_count))
     batch_add_nodes(client, apps_client, cfile, ['routing'], [route_count], BATCH_SIZE, prefix)
