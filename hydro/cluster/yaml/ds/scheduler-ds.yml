@@ -43,11 +43,11 @@ spec:
         - name: ROLE
           value: scheduler
         - name: REPO_ORG
-          value: hydro-project
+          value: satorikoishi
         - name: REPO_BRANCH
           value: master
         - name: ANNA_REPO_ORG
-          value: hydro-project
+          value: satorikoishi
         - name: ANNA_REPO_BRANCH
           value: master
         - name: POLICY
