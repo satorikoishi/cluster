@@ -27,8 +27,7 @@ BATCH_SIZE = 100
 # ec2_client = boto3.client('ec2', os.getenv('AWS_REGION', 'us-east-1'))
 
 def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
-                   route_count, bench_count, cfile, ssh_key, cluster_name,
-                   kops_bucket, aws_key_id, aws_key):
+                   route_count, bench_count, cfile, ssh_key):
 
     if 'HYDRO_HOME' not in os.environ:
         raise ValueError('HYDRO_HOME environment variable must be set to be '
@@ -40,20 +39,15 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
 
     client, apps_client = util.init_k8s()
 
-    print('Creating management pods...')
-    management_spec = util.load_yaml('yaml/pods/management-pod.yml', prefix)
-    env = management_spec['spec']['containers'][0]['env']
+    # print('Creating management pods...')
+    # management_spec = util.load_yaml('yaml/pods/management-pod.yml', prefix)
+    # env = management_spec['spec']['containers'][0]['env']
 
-    # util.replace_yaml_val(env, 'AWS_ACCESS_KEY_ID', aws_key_id)
-    # util.replace_yaml_val(env, 'AWS_SECRET_ACCESS_KEY', aws_key)
-    # util.replace_yaml_val(env, 'KOPS_STATE_STORE', kops_bucket)
-    # util.replace_yaml_val(env, 'HYDRO_CLUSTER_NAME', cluster_name)
+    # client.create_namespaced_pod(namespace=util.NAMESPACE, body=management_spec)
 
-    client.create_namespaced_pod(namespace=util.NAMESPACE, body=management_spec)
-
-    # Waits until the management pod starts to move forward -- we need to do
-    # this because other pods depend on knowing the management pod's IP address.
-    management_ip = util.get_pod_ips(client, 'role=management', is_running=True)[0]
+    # # Waits until the management pod starts to move forward -- we need to do
+    # # this because other pods depend on knowing the management pod's IP address.
+    # management_ip = util.get_pod_ips(client, 'role=management', is_running=True)[0]
 
     # # Create the NVidia kubernetes plugin DaemonSet that enables GPU accesses.
     # nvidia_ds_exists = True
@@ -70,22 +64,24 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
 
     #     os.system('rm nvidia-device-plugin.yml')
 
-    # Copy kube config file to management pod, so it can execute kubectl
-    # commands, in addition to SSH keys and KVS config.
-    management_podname = management_spec['metadata']['name']
-    kcname = management_spec['spec']['containers'][0]['name']
+    # # Copy kube config file to management pod, so it can execute kubectl
+    # # commands, in addition to SSH keys and KVS config.
+    # management_podname = management_spec['metadata']['name']
+    # kcname = management_spec['spec']['containers'][0]['name']
 
     os.system('cp %s anna-config.yml' % cfile)
-    kubecfg = os.path.join(os.environ['HOME'], '.kube/config')
-    util.copy_file_to_pod(client, kubecfg, management_podname, '/root/.kube/',
-                          kcname)
-    util.copy_file_to_pod(client, ssh_key, management_podname, '/root/.ssh/',
-                          kcname)
-    util.copy_file_to_pod(client, ssh_key + '.pub', management_podname,
-                          '/root/.ssh/', kcname)
-    util.copy_file_to_pod(client, 'anna-config.yml', management_podname,
-                          '/hydro/anna/conf/', kcname)
+    # kubecfg = os.path.join(os.environ['HOME'], '.kube/config')
+    # util.copy_file_to_pod(client, kubecfg, management_podname, '/root/.kube/',
+    #                       kcname)
+    # util.copy_file_to_pod(client, ssh_key, management_podname, '/root/.ssh/',
+    #                       kcname)
+    # util.copy_file_to_pod(client, ssh_key + '.pub', management_podname,
+    #                       '/root/.ssh/', kcname)
+    # util.copy_file_to_pod(client, 'anna-config.yml', management_podname,
+    #                       '/hydro/anna/conf/', kcname)
 
+    management_ip = '127.0.0.1'
+    
     # Start the monitoring pod.
     mon_spec = util.load_yaml('yaml/pods/monitoring-pod.yml', prefix)
     util.replace_yaml_val(mon_spec['spec']['containers'][0]['env'], 'MGMT_IP',
@@ -218,18 +214,8 @@ if __name__ == '__main__':
                         default=os.path.join(os.environ['HOME'],
                                              '.ssh/id_rsa'))
 
-    # cluster_name = util.check_or_get_env_arg('HYDRO_CLUSTER_NAME')
-    # kops_bucket = util.check_or_get_env_arg('KOPS_STATE_STORE')
-    # aws_key_id = util.check_or_get_env_arg('AWS_ACCESS_KEY_ID')
-    # aws_key = util.check_or_get_env_arg('AWS_SECRET_ACCESS_KEY')
-    cluster_name = None
-    kops_bucket = None
-    aws_key_id = None
-    aws_key = None
-
     args = parser.parse_args()
 
     create_cluster(args.memory[0], args.ebs, args.function[0], args.gpu,
                    args.scheduler[0], args.routing[0], args.benchmark,
-                   args.conf, args.sshkey, cluster_name, kops_bucket,
-                   aws_key_id, aws_key)
+                   args.conf, args.sshkey)
