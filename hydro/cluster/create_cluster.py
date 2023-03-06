@@ -34,7 +34,7 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
         raise ValueError('HYDRO_HOME environment variable must be set to be '
                          + 'the directory where all Hydro project repos are '
                          + 'located.')
-    prefix = os.path.join(os.environ['HYDRO_HOME'], 'hydro-cluster/hydro/cluster')
+    prefix = os.path.join(os.environ['HYDRO_HOME'], 'cluster/hydro/cluster')
 
     # util.run_process(['./create_cluster_object.sh', kops_bucket, ssh_key])
 
