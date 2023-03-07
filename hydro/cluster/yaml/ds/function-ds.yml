@@ -125,7 +125,7 @@ spec:
         - mountPath: /requests
           name: ipc
       - name: cache-container
-        image: jwkaguya/anna-cache
+        image: hydroproject/anna-cache
         imagePullPolicy: Always
         resources:
           limits:
