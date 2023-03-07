@@ -96,9 +96,6 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
                           '/hydro/anna/conf/',
                           mon_spec['spec']['containers'][0]['name'])
     os.system('rm anna-config.yml')
-    
-    # 1st Try
-    exit()
 
     print('Creating %d routing nodes...' % (route_count))
     batch_add_nodes(client, apps_client, cfile, ['routing'], [route_count], BATCH_SIZE, prefix)
@@ -138,29 +135,29 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
                     BATCH_SIZE, prefix)
 
     print('Finished creating all pods...')
-    os.system('touch setup_complete')
-    util.copy_file_to_pod(client, 'setup_complete', management_podname, '/hydro',
-                          kcname)
-    os.system('rm setup_complete')
+    # os.system('touch setup_complete')
+    # util.copy_file_to_pod(client, 'setup_complete', management_podname, '/hydro',
+    #                       kcname)
+    # os.system('rm setup_complete')
 
-    sg_name = 'nodes.' + cluster_name
-    sg = ec2_client.describe_security_groups(
-          Filters=[{'Name': 'group-name',
-                    'Values': [sg_name]}])['SecurityGroups'][0]
+    # sg_name = 'nodes.' + cluster_name
+    # sg = ec2_client.describe_security_groups(
+    #       Filters=[{'Name': 'group-name',
+    #                 'Values': [sg_name]}])['SecurityGroups'][0]
 
-    print('Authorizing ports for routing service...')
+    # print('Authorizing ports for routing service...')
 
-    permission = [{
-        'FromPort': 6200,
-        'IpProtocol': 'tcp',
-        'ToPort': 6203,
-        'IpRanges': [{
-            'CidrIp': '0.0.0.0/0'
-        }]
-    }]
+    # permission = [{
+    #     'FromPort': 6200,
+    #     'IpProtocol': 'tcp',
+    #     'ToPort': 6203,
+    #     'IpRanges': [{
+    #         'CidrIp': '0.0.0.0/0'
+    #     }]
+    # }]
 
-    ec2_client.authorize_security_group_ingress(GroupId=sg['GroupId'],
-                                                IpPermissions=permission)
+    # ec2_client.authorize_security_group_ingress(GroupId=sg['GroupId'],
+    #                                             IpPermissions=permission)
 
     routing_svc_addr = util.get_service_address(client, 'routing-service')
     function_svc_addr = util.get_service_address(client, 'function-service')
