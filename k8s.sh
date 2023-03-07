@@ -55,6 +55,7 @@ echo '{
    }
  ]
 }' > 10-containerd-net.conflist
+sudo mkdir -p /etc/cni/net.d/
 sudo mv 10-containerd-net.conflist /etc/cni/net.d/10-containerd-net.conflist
 sudo systemctl restart containerd
 
