@@ -120,12 +120,11 @@ def get_service_address(client, svc_name):
     except k8s.client.rest.ApiException:
         return None
 
-    while service.status.load_balancer.ingress is None or \
-            service.status.load_balancer.ingress[0].hostname is None:
+    while service.status.spec.cluster_ip is None:
         service = client.read_namespaced_service(namespace=NAMESPACE,
                                                  name=svc_name)
 
-    return service.status.load_balancer.ingress[0].hostname
+    return service.status.spec.cluster_ip
 
 
 # from https://github.com/aogier/k8s-client-python/
