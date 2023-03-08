@@ -17,7 +17,7 @@ kind: Service
 metadata:
   name: routing-service
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
   - port: 6450
     targetPort: 6450

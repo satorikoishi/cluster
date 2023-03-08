@@ -17,7 +17,7 @@ kind: Service
 metadata:
   name: function-service
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
   - port: 5000
     targetPort: 5000
