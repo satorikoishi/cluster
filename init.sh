@@ -21,4 +21,9 @@ cd ~
 # # cluster
 # git clone --recurse-submodules https://github.com/satorikoishi/cluster.git
 
+# repos
+git clone --recurse-submodules https://github.com/satorikoishi/cloudburst.git
+git clone --recurse-submodules https://github.com/satorikoishi/anna.git
+git clone --recurse-submodules https://github.com/satorikoishi/anna-cache.git
+
 echo 'export HYDRO_HOME=~' >> ~/.bashrc
