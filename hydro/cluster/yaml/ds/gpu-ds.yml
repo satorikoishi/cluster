@@ -68,7 +68,7 @@ spec:
         - mountPath: /requests
           name: ipc
       - name: cache-container
-        image: hydroproject/anna-cache
+        image: jwkaguya/anna-cache
         imagePullPolicy: Always
         env:
         - name: ROUTE_ADDR
