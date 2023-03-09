@@ -73,10 +73,10 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
     kubecfg = os.path.join(os.environ['HOME'], '.kube/config')
     util.copy_file_to_pod(client, kubecfg, management_podname, '/root/.kube/',
                           kcname)
-    util.copy_file_to_pod(client, ssh_key, management_podname, '/root/.ssh/',
-                          kcname)
-    util.copy_file_to_pod(client, ssh_key + '.pub', management_podname,
-                          '/root/.ssh/', kcname)
+    # util.copy_file_to_pod(client, ssh_key, management_podname, '/root/.ssh/',
+    #                       kcname)
+    # util.copy_file_to_pod(client, ssh_key + '.pub', management_podname,
+    #                       '/root/.ssh/', kcname)
     util.copy_file_to_pod(client, 'anna-config.yml', management_podname,
                           '/hydro/anna/conf/', kcname)
     
