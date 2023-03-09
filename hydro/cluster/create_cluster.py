@@ -83,6 +83,7 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
     management_ip = '127.0.0.1'
     
     # Start the monitoring pod.
+    print('Creating monitoring pods...')
     mon_spec = util.load_yaml('yaml/pods/monitoring-pod.yml', prefix)
     util.replace_yaml_val(mon_spec['spec']['containers'][0]['env'], 'MGMT_IP',
                           management_ip)
@@ -133,6 +134,11 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
     print('Adding %d benchmark nodes...' % (bench_count))
     batch_add_nodes(client, apps_client, cfile, ['benchmark'], [bench_count],
                     BATCH_SIZE, prefix)
+    print('Creating benchmark service...')
+    service_spec = util.load_yaml('yaml/services/benchmark.yml', prefix)
+    if util.get_service_address(client, 'benchmark-service') is None:
+        client.create_namespaced_service(namespace=util.NAMESPACE,
+                                         body=service_spec)
 
     print('Finished creating all pods...')
     # os.system('touch setup_complete')
@@ -161,10 +167,13 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
 
     routing_svc_addr = util.get_service_address(client, 'routing-service')
     function_svc_addr = util.get_service_address(client, 'function-service')
+    benchmark_svc_addr = util.get_service_address(client, 'benchmark-service')
     print('The routing service can be accessed here: \n\t%s' %
           (routing_svc_addr))
     print('The function service can be accessed here: \n\t%s' %
           (function_svc_addr))
+    print('The benchmark service can be accessed here: \n\t%s' %
+          (benchmark_svc_addr))
 
 
 if __name__ == '__main__':
