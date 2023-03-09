@@ -54,7 +54,7 @@ def add_nodes(client, apps_client, cfile, kinds, counts, create=False,
 
     # util.run_process(['./validate_cluster.sh'])
 
-    management_ip = '127.0.0.1'
+    management_ip = util.get_pod_ips(client, 'role=management')[0]
     route_ips = util.get_pod_ips(client, 'role=routing')
 
     if len(route_ips) > 0:
