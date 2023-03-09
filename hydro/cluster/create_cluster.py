@@ -39,15 +39,15 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
 
     client, apps_client = util.init_k8s()
 
-    # print('Creating management pods...')
-    # management_spec = util.load_yaml('yaml/pods/management-pod.yml', prefix)
+    print('Creating management pods...')
+    management_spec = util.load_yaml('yaml/pods/management-pod.yml', prefix)
     # env = management_spec['spec']['containers'][0]['env']
 
-    # client.create_namespaced_pod(namespace=util.NAMESPACE, body=management_spec)
+    client.create_namespaced_pod(namespace=util.NAMESPACE, body=management_spec)
 
-    # # Waits until the management pod starts to move forward -- we need to do
-    # # this because other pods depend on knowing the management pod's IP address.
-    # management_ip = util.get_pod_ips(client, 'role=management', is_running=True)[0]
+    # Waits until the management pod starts to move forward -- we need to do
+    # this because other pods depend on knowing the management pod's IP address.
+    management_ip = util.get_pod_ips(client, 'role=management', is_running=True)[0]
 
     # # Create the NVidia kubernetes plugin DaemonSet that enables GPU accesses.
     # nvidia_ds_exists = True
@@ -64,23 +64,21 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
 
     #     os.system('rm nvidia-device-plugin.yml')
 
-    # # Copy kube config file to management pod, so it can execute kubectl
-    # # commands, in addition to SSH keys and KVS config.
-    # management_podname = management_spec['metadata']['name']
-    # kcname = management_spec['spec']['containers'][0]['name']
+    # Copy kube config file to management pod, so it can execute kubectl
+    # commands, in addition to SSH keys and KVS config.
+    management_podname = management_spec['metadata']['name']
+    kcname = management_spec['spec']['containers'][0]['name']
 
     os.system('cp %s anna-config.yml' % cfile)
-    # kubecfg = os.path.join(os.environ['HOME'], '.kube/config')
-    # util.copy_file_to_pod(client, kubecfg, management_podname, '/root/.kube/',
-    #                       kcname)
-    # util.copy_file_to_pod(client, ssh_key, management_podname, '/root/.ssh/',
-    #                       kcname)
-    # util.copy_file_to_pod(client, ssh_key + '.pub', management_podname,
-    #                       '/root/.ssh/', kcname)
-    # util.copy_file_to_pod(client, 'anna-config.yml', management_podname,
-    #                       '/hydro/anna/conf/', kcname)
-
-    management_ip = '127.0.0.1'
+    kubecfg = os.path.join(os.environ['HOME'], '.kube/config')
+    util.copy_file_to_pod(client, kubecfg, management_podname, '/root/.kube/',
+                          kcname)
+    util.copy_file_to_pod(client, ssh_key, management_podname, '/root/.ssh/',
+                          kcname)
+    util.copy_file_to_pod(client, ssh_key + '.pub', management_podname,
+                          '/root/.ssh/', kcname)
+    util.copy_file_to_pod(client, 'anna-config.yml', management_podname,
+                          '/hydro/anna/conf/', kcname)
     
     # Start the monitoring pod.
     print('Creating monitoring pods...')
@@ -141,10 +139,10 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
                                          body=service_spec)
 
     print('Finished creating all pods...')
-    # os.system('touch setup_complete')
-    # util.copy_file_to_pod(client, 'setup_complete', management_podname, '/hydro',
-    #                       kcname)
-    # os.system('rm setup_complete')
+    os.system('touch setup_complete')
+    util.copy_file_to_pod(client, 'setup_complete', management_podname, '/hydro',
+                          kcname)
+    os.system('rm setup_complete')
 
     # sg_name = 'nodes.' + cluster_name
     # sg = ec2_client.describe_security_groups(

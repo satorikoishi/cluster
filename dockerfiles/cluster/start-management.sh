@@ -14,14 +14,14 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-IP=`ifconfig eth0 | grep 'inet' | grep -v inet6 | sed -e 's/^[ \t]*//' | cut -d' ' -f2`
+IP=`ifconfig eno1 | grep 'inet' | grep -v inet6 | sed -e 's/^[ \t]*//' | cut -d' ' -f2`
 
-# Copies AWS environment variables for accessing the user's AWS account into
-# the ~/.aws/config file.
-mkdir -p ~/.aws
-echo "[default]\nregion = us-east-1" > ~/.aws/config
-echo "[default]\naws_access_key_id = $AWS_ACCESS_KEY_ID\naws_secret_access_key = $AWS_SECRET_ACCESS_KEY" > ~/.aws/credentials
-mkdir -p ~/.ssh
+# # Copies AWS environment variables for accessing the user's AWS account into
+# # the ~/.aws/config file.
+# mkdir -p ~/.aws
+# echo "[default]\nregion = us-east-1" > ~/.aws/config
+# echo "[default]\naws_access_key_id = $AWS_ACCESS_KEY_ID\naws_secret_access_key = $AWS_SECRET_ACCESS_KEY" > ~/.aws/credentials
+# mkdir -p ~/.ssh
 
 cd $HYDRO_HOME/anna
 git remote remove origin
