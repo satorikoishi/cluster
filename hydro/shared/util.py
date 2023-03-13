@@ -99,7 +99,21 @@ def get_pod_ips(client, selector, is_running=False):
 
     return pod_ips
 
+def wait_for_container_running(client, selector):
+    while True:
+        pod_list = client.list_namespaced_pod(namespace=NAMESPACE,
+                                              label_selector=selector).items
 
+        # Assume only one monitoring-pod
+        assert(len(pod_list) == 1)
+        container_statuses = pod_list[0].status.container_statuses
+        
+        # Assume only one container in monitoring pod
+        assert(len(container_statuses) == 1)
+        status = container_statuses[0]
+        if status.ready:
+            return
+            
 def get_previous_count(client, kind):
     selector = 'role=%s' % (kind)
     items = client.list_namespaced_pod(namespace=NAMESPACE,

@@ -90,6 +90,7 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
     # Wait until the monitoring pod is finished creating to get its IP address
     # and then copy KVS config into the monitoring pod.
     util.get_pod_ips(client, 'role=monitoring')
+    util.wait_for_container_running(client, 'role=monitoring')
     util.copy_file_to_pod(client, 'anna-config.yml',
                           mon_spec['metadata']['name'],
                           '/hydro/anna/conf/',
