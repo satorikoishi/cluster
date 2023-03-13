@@ -19,6 +19,7 @@ metadata:
   labels: 
     role: monitoring
 spec:
+  hostNetwork: true
   containers:
   - name: monitoring-container
     image: jwkaguya/anna
