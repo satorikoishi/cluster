@@ -21,6 +21,15 @@ spec:
   ports:
   - port: 3000
     targetPort: 3000
-    name: benchmark
+    name: benchmark-0
+  - port: 3001
+    targetPort: 3001
+    name: benchmark-1
+  - port: 3002
+    targetPort: 3002
+    name: benchmark-2
+  - port: 3003
+    targetPort: 3003
+    name: benchmark-3
   selector:
     role: benchmark
