@@ -16,7 +16,12 @@ Create file named **nodes.txt**, format like nodes-example.txt
 
 Copy SSH command into **nodes.txt**, one node per line
 
-Then, run ``fab init``, ``fab cluster``
+Then, run 
+
+```shell
+$ fab init
+$ fab cluster
+```
 
 ## Create cluster
 
@@ -24,7 +29,9 @@ SSH to node0
 
 Under ~/cluster/
 
-Run ``python3 -m hydro.cluster.create_cluster -m 1 -r 1 -f 1 -s 1``
+```shell
+$ python3 -m hydro.cluster.create_cluster -m 1 -r 1 -f 1 -s 1
+```
 
 ## Using Cloudburst Client
 
@@ -39,18 +46,18 @@ python3 cloudburst/client/benchmark_trigger.py {Node IP}:composition:10
 `` -->
 Directly use bench container as client
 
-``
+```shell
 $ k exec -it bench...(use Tab to autocomplete) -c benchmark-2 -- /bin/bash
-``
+```
 
 In container
 
-``
+```shell
 $ cd hydro/cloudburst
 $ export PYTHONPATH = $(pwd)
 $ echo '{Benchmark Service IP}' > bench_ips.txt
 $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:{workload}:{num requests}:{args}
-``
+```
 
 ## Workloads
 
@@ -58,9 +65,9 @@ $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:{workload}:{
 
 Before first run, prepare data
 
-``
+```shell
 $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:prepare:1
-``
+```
 
 Run microbench, args: [Workload, Length]
 
@@ -73,22 +80,22 @@ Length from 10, 100, ... to 1000000
 
 Example, which issues 100 requests to read arrays, length of which is 10
 
-``
+```shell
 $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:micro:100:read_single:10
-``
+```
 
 ### K-hop
 
 Before first run, prepare data
 
-``
+```shell
 $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:k_hop:1:c
-``
+```
 
 Run k-hop, args: k (k < 4, else the execution will consume too much time)
 
 Example, which issues 100 requests to do 2-hop queries
 
-``
+```shell
 $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:k_hop:100:2
-``
+```
