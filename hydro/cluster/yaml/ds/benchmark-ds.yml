@@ -52,6 +52,10 @@ spec:
           value: master
         - name: IFACE
           value: eno1
+        - name: USER_STATE_IP
+          value: USER_STATE_IP_DUMMY
+        - name: USER_STATE_TYPE
+          value: anna
       - name: benchmark-2
         image: jwkaguya/cloudburst
         env: 
@@ -73,6 +77,10 @@ spec:
           value: master
         - name: IFACE
           value: eno1
+        - name: USER_STATE_IP
+          value: USER_STATE_IP_DUMMY
+        - name: USER_STATE_TYPE
+          value: anna
       - name: benchmark-3
         image: jwkaguya/cloudburst
         env: 
@@ -94,6 +102,10 @@ spec:
           value: master
         - name: IFACE
           value: eno1
+        - name: USER_STATE_IP
+          value: USER_STATE_IP_DUMMY
+        - name: USER_STATE_TYPE
+          value: anna
       - name: benchmark-4
         image: jwkaguya/cloudburst
         env: 
@@ -115,3 +127,7 @@ spec:
           value: master
         - name: IFACE
           value: eno1
+        - name: USER_STATE_IP
+          value: USER_STATE_IP_DUMMY
+        - name: USER_STATE_TYPE
+          value: anna

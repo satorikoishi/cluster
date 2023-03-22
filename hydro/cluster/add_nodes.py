@@ -34,7 +34,7 @@ def get_current_pod_container_pairs(pods):
     return pod_container_pairs
 
 def add_nodes(client, apps_client, cfile, kinds, counts, create=False,
-              prefix=None):
+              prefix=None, user_state_type=None):
     previously_created_pods_list = []
     expected_counts = []
     for i in range(len(kinds)):
@@ -90,6 +90,8 @@ def add_nodes(client, apps_client, cfile, kinds, counts, create=False,
                 util.replace_yaml_val(env, 'MON_IPS', mon_str)
                 util.replace_yaml_val(env, 'MGMT_IP', management_ip)
                 util.replace_yaml_val(env, 'SEED_IP', seed_ip)
+                util.replace_yaml_val(env, 'USER_STATE_TYPE', user_state_type)
+                util.replace_yaml_val(env, 'USER_STATE_IP', route_str)
 
             apps_client.create_namespaced_daemon_set(namespace=util.NAMESPACE,
                                                      body=yml)
@@ -123,10 +125,10 @@ def add_nodes(client, apps_client, cfile, kinds, counts, create=False,
 
         os.system('rm ./anna-config.yml')
 
-def batch_add_nodes(client, apps_client, cfile, node_types, node_counts, batch_size, prefix):
+def batch_add_nodes(client, apps_client, cfile, node_types, node_counts, batch_size, prefix, user_state_type=None):
   if sum(node_counts) <= batch_size:
     add_nodes(client, apps_client, cfile, node_types, node_counts, True,
-              prefix)
+              prefix, user_state_type)
   else:
     for i in range(len(node_types)):
         if node_counts[i] <= batch_size:
@@ -135,7 +137,7 @@ def batch_add_nodes(client, apps_client, cfile, node_types, node_counts, batch_s
             batch_count = 1
             print('Batch %d: adding %d nodes...' % (batch_count, batch_size))
             add_nodes(client, apps_client, cfile, [node_types[i]], [batch_size], True,
-                      prefix)
+                      prefix, user_state_type)
             remaining_count = node_counts[i] - batch_size
             batch_count += 1
             while remaining_count > 0:

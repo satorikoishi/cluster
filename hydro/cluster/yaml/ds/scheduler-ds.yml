@@ -54,3 +54,7 @@ spec:
           value: locality
         - name: IFACE
           value: eno1
+        - name: USER_STATE_IP
+          value: USER_STATE_IP_DUMMY
+        - name: USER_STATE_TYPE
+          value: anna

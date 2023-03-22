@@ -65,6 +65,10 @@ spec:
           value: master
         - name: IFACE
           value: eno1
+        - name: USER_STATE_IP
+          value: USER_STATE_IP_DUMMY
+        - name: USER_STATE_TYPE
+          value: anna
         volumeMounts:
         - mountPath: /requests
           name: ipc
@@ -96,6 +100,10 @@ spec:
           value: master
         - name: IFACE
           value: eno1
+        - name: USER_STATE_IP
+          value: USER_STATE_IP_DUMMY
+        - name: USER_STATE_TYPE
+          value: anna
         volumeMounts:
         - mountPath: /requests
           name: ipc
@@ -127,6 +135,10 @@ spec:
           value: master
         - name: IFACE
           value: eno1
+        - name: USER_STATE_IP
+          value: USER_STATE_IP_DUMMY
+        - name: USER_STATE_TYPE
+          value: anna
         volumeMounts:
         - mountPath: /requests
           name: ipc

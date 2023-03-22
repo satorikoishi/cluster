@@ -27,7 +27,7 @@ BATCH_SIZE = 100
 # ec2_client = boto3.client('ec2', os.getenv('AWS_REGION', 'us-east-1'))
 
 def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
-                   route_count, bench_count, cfile, ssh_key):
+                   route_count, bench_count, user_state_type, cfile, ssh_key):
 
     if 'HYDRO_HOME' not in os.environ:
         raise ValueError('HYDRO_HOME environment variable must be set to be '
@@ -105,7 +105,7 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
           (mem_count, ebs_count))
     batch_add_nodes(client, apps_client, cfile, ['memory', 'ebs'], [mem_count,
                                                                     ebs_count],
-                    BATCH_SIZE, prefix)
+                    BATCH_SIZE, prefix, user_state_type)
 
     print('Creating routing service...')
     service_spec = util.load_yaml('yaml/services/routing.yml', prefix)
@@ -208,6 +208,9 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--benchmark', nargs='?', type=int, metavar='B',
                         help='The number of benchmark nodes in the cluster ' +
                         '(optional)', dest='benchmark', default=0)
+    parser.add_argument('-t', '--user_state_type', nargs='?', type=str, 
+                        help='User state client type', dest='user_state_type', 
+                        default='anna')
     parser.add_argument('--conf', nargs='?', type=str,
                         help='The configuration file to start the cluster with'
                         + ' (optional)', dest='conf',
@@ -223,4 +226,4 @@ if __name__ == '__main__':
 
     create_cluster(args.memory[0], args.ebs, args.function[0], args.gpu,
                    args.scheduler[0], args.routing[0], args.benchmark,
-                   args.conf, args.sshkey)
+                   args.user_state_type, args.conf, args.sshkey)
