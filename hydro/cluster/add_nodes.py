@@ -91,7 +91,7 @@ def add_nodes(client, apps_client, cfile, kinds, counts, create=False,
                 util.replace_yaml_val(env, 'MGMT_IP', management_ip)
                 util.replace_yaml_val(env, 'SEED_IP', seed_ip)
                 util.replace_yaml_val(env, 'USER_STATE_TYPE', user_state_type)
-                util.replace_yaml_val(env, 'USER_STATE_IP', route_str)
+                util.replace_yaml_val(env, 'USER_STATE_IP', route_addr)
 
             apps_client.create_namespaced_daemon_set(namespace=util.NAMESPACE,
                                                      body=yml)

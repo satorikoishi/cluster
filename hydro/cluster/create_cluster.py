@@ -117,12 +117,12 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
 
     print('Adding %d scheduler nodes...' % (sched_count))
     batch_add_nodes(client, apps_client, cfile, ['scheduler'], [sched_count],
-                    BATCH_SIZE, prefix)
+                    BATCH_SIZE, prefix, user_state_type)
     util.get_pod_ips(client, 'role=scheduler')
 
     print('Adding %d function, %d GPU nodes...' % (func_count, gpu_count))
     batch_add_nodes(client, apps_client, cfile, ['function', 'gpu'],
-                    [func_count, gpu_count], BATCH_SIZE, prefix)
+                    [func_count, gpu_count], BATCH_SIZE, prefix, user_state_type)
 
     print('Creating function service...')
     service_spec = util.load_yaml('yaml/services/function.yml', prefix)
@@ -132,7 +132,7 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
 
     print('Adding %d benchmark nodes...' % (bench_count))
     batch_add_nodes(client, apps_client, cfile, ['benchmark'], [bench_count],
-                    BATCH_SIZE, prefix)
+                    BATCH_SIZE, prefix, user_state_type)
     print('Creating benchmark service...')
     service_spec = util.load_yaml('yaml/services/benchmark.yml', prefix)
     if util.get_service_address(client, 'benchmark-service') is None:
