@@ -48,6 +48,8 @@ spec:
             value: satorikoishi
           - name: REPO_BRANCH
             value: master
+          - name: IFACE
+            value: eno1
           volumeMounts:
           - mountPath: /ebs/ebs_0
             name: ebs0

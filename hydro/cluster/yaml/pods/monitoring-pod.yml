@@ -32,5 +32,7 @@ spec:
       value: satorikoishi
     - name: REPO_BRANCH
       value: master
+    - name: IFACE
+      value: eno1
   nodeSelector:
     role: general

@@ -64,6 +64,8 @@ spec:
           value: master
         - name: EXECUTOR_TYPE
           value: "GPU"
+        - name: IFACE
+          value: eno1
         volumeMounts:
         - mountPath: /requests
           name: ipc
@@ -79,6 +81,8 @@ spec:
           value: satorikoishi
         - name: REPO_BRANCH
           value: master
+        - name: IFACE
+          value: eno1
         volumeMounts:
         - mountPath: /requests
           name: ipc

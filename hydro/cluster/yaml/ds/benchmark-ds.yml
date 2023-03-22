@@ -50,6 +50,8 @@ spec:
           value: satorikoishi
         - name: ANNA_REPO_BRANCH
           value: master
+        - name: IFACE
+          value: eno1
       - name: benchmark-2
         image: jwkaguya/cloudburst
         env: 
@@ -69,6 +71,8 @@ spec:
           value: satorikoishi
         - name: ANNA_REPO_BRANCH
           value: master
+        - name: IFACE
+          value: eno1
       - name: benchmark-3
         image: jwkaguya/cloudburst
         env: 
@@ -88,6 +92,8 @@ spec:
           value: satorikoishi
         - name: ANNA_REPO_BRANCH
           value: master
+        - name: IFACE
+          value: eno1
       - name: benchmark-4
         image: jwkaguya/cloudburst
         env: 
@@ -107,3 +113,5 @@ spec:
           value: satorikoishi
         - name: ANNA_REPO_BRANCH
           value: master
+        - name: IFACE
+          value: eno1

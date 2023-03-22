@@ -63,6 +63,8 @@ spec:
           value: satorikoishi
         - name: ANNA_REPO_BRANCH
           value: master
+        - name: IFACE
+          value: eno1
         volumeMounts:
         - mountPath: /requests
           name: ipc
@@ -92,6 +94,8 @@ spec:
           value: satorikoishi
         - name: ANNA_REPO_BRANCH
           value: master
+        - name: IFACE
+          value: eno1
         volumeMounts:
         - mountPath: /requests
           name: ipc
@@ -121,6 +125,8 @@ spec:
           value: satorikoishi
         - name: ANNA_REPO_BRANCH
           value: master
+        - name: IFACE
+          value: eno1
         volumeMounts:
         - mountPath: /requests
           name: ipc
