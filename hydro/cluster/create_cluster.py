@@ -27,7 +27,7 @@ BATCH_SIZE = 100
 # ec2_client = boto3.client('ec2', os.getenv('AWS_REGION', 'us-east-1'))
 
 def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
-                   route_count, bench_count, user_state_type, cfile, ssh_key):
+                   route_count, bench_count, user_state_type, cfile, ssh_key, user_state_ip):
 
     if 'HYDRO_HOME' not in os.environ:
         raise ValueError('HYDRO_HOME environment variable must be set to be '
@@ -117,12 +117,12 @@ def create_cluster(mem_count, ebs_count, func_count, gpu_count, sched_count,
 
     print('Adding %d scheduler nodes...' % (sched_count))
     batch_add_nodes(client, apps_client, cfile, ['scheduler'], [sched_count],
-                    BATCH_SIZE, prefix, user_state_type)
+                    BATCH_SIZE, prefix, user_state_type, user_state_ip)
     util.get_pod_ips(client, 'role=scheduler')
 
     print('Adding %d function, %d GPU nodes...' % (func_count, gpu_count))
     batch_add_nodes(client, apps_client, cfile, ['function', 'gpu'],
-                    [func_count, gpu_count], BATCH_SIZE, prefix, user_state_type)
+                    [func_count, gpu_count], BATCH_SIZE, prefix, user_state_type, user_state_ip)
 
     print('Creating function service...')
     service_spec = util.load_yaml('yaml/services/function.yml', prefix)
@@ -221,9 +221,12 @@ if __name__ == '__main__':
                         'each node (optional)', dest='sshkey',
                         default=os.path.join(os.environ['HOME'],
                                              '.ssh/id_rsa'))
+    parser.add_argument('--us-ip', nargs='?', type=str,
+                        help='Specify route address (for shredder)', dest='user_state_ip',
+                        default=None)
 
     args = parser.parse_args()
 
     create_cluster(args.memory[0], args.ebs, args.function[0], args.gpu,
                    args.scheduler[0], args.routing[0], args.benchmark,
-                   args.user_state_type, args.conf, args.sshkey)
+                   args.user_state_type, args.conf, args.sshkey, args.user_state_ip)
