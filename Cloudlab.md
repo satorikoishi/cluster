@@ -38,6 +38,8 @@ $ python3 -m hydro.cluster.create_cluster -m 1 -r 1 -f 1 -s 1 -t shredder --us-i
 ```
 
 ## Using Cloudburst Client
+You can manually execute commands or simply use scripts.
+### Manually execute commands
 
 <!-- On node0
 
@@ -61,6 +63,15 @@ $ cd hydro/cloudburst
 $ export PYTHONPATH = $(pwd)
 $ echo '{Benchmark Service IP}' > bench_ips.txt
 $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:{workload}:{num requests}:{args}
+```
+
+### Use scripts
+
+SSH to node0
+
+Under `~/cluster/`
+```shell
+./scripts/run_benchmark.sh {workload}:{num requests}:{args}
 ```
 
 ## Workloads
