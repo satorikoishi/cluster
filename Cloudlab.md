@@ -114,3 +114,25 @@ Example, which issues 100 requests to do 2-hop queries
 ```shell
 $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:k_hop:100:2
 ```
+
+### List traversal
+
+Before first run, prepare data
+
+```shell
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:1:c
+```
+
+Run `list_traversal`, args: k
+
+Example, which issues 100 requests to do 2-depth queries
+
+```shell
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:100:2
+```
+
+Run `list_traversal` JavaScript RPC version with shredder
+
+```shell
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:100:js:2
+```
