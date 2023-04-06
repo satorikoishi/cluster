@@ -85,7 +85,7 @@ Before the first run, prepare data:
 $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:prepare:1
 ```
 
-Run microbench, args: [Workload, Length]
+Run microbench, args: [KVS name, Workload, Length]
 
 Workloads:
 
@@ -94,10 +94,10 @@ Workloads:
 
 Lengths range from 10, 100, ..., to 1000000
 
-Example: issue 100 requests to read arrays with length 10
+Example: issue 100 requests to read arrays from Anna with length 10
 
 ```shell
-$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:micro:100:read_single:10
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:micro:100:anna:read_single:10
 ```
 
 ### K-hop
@@ -119,29 +119,20 @@ $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:k_hop:100:2
 ### List traversal
 
 Before the first run, prepare data:
+```shell
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:1:c
+```
 
-- Using Anna:
-
-  ```shell
-  $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:1:c
-  ```
-
-- Using Shredder:
-
-  ```shell
-  $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:1:c:shredder
-  ```
-
-Run `list_traversal`, args: k
+Run `list_traversal`, args: KVS name, k
 
 Example: issue 100 requests to perform 2-depth queries
 
 ```shell
-$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:100:2
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:100:anna:2
 ```
 
 Run `list_traversal` JavaScript RPC version with shredder
 
 ```shell
-$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:100:js:2
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:100:shredder:2
 ```
