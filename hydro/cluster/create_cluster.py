@@ -210,7 +210,7 @@ if __name__ == '__main__':
                         '(optional)', dest='benchmark', default=0)
     parser.add_argument('-t', '--user_state_type', nargs='?', type=str, 
                         help='User state client type', dest='user_state_type', 
-                        default='anna')
+                        default='shredder')
     parser.add_argument('--conf', nargs='?', type=str,
                         help='The configuration file to start the cluster with'
                         + ' (optional)', dest='conf',

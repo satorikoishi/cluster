@@ -55,7 +55,7 @@ spec:
         - name: USER_STATE_IP
           value: USER_STATE_IP_DUMMY
         - name: USER_STATE_TYPE
-          value: anna
+          value: shredder
       - name: benchmark-2
         image: jwkaguya/cloudburst
         env: 
@@ -80,7 +80,7 @@ spec:
         - name: USER_STATE_IP
           value: USER_STATE_IP_DUMMY
         - name: USER_STATE_TYPE
-          value: anna
+          value: shredder
       - name: benchmark-3
         image: jwkaguya/cloudburst
         env: 
@@ -105,7 +105,7 @@ spec:
         - name: USER_STATE_IP
           value: USER_STATE_IP_DUMMY
         - name: USER_STATE_TYPE
-          value: anna
+          value: shredder
       - name: benchmark-4
         image: jwkaguya/cloudburst
         env: 
@@ -130,4 +130,4 @@ spec:
         - name: USER_STATE_IP
           value: USER_STATE_IP_DUMMY
         - name: USER_STATE_TYPE
-          value: anna
+          value: shredder

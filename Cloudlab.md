@@ -29,14 +29,9 @@ SSH to node0
 
 Under ~/cluster/
 
-- Using Anna:
-  ```shell
-  $ python3 -m hydro.cluster.create_cluster -m 1 -r 1 -f 1 -s 1
-  ```
-- Using Shredder:
-  ```shell
-  $ python3 -m hydro.cluster.create_cluster -m 1 -r 1 -f 1 -s 1 -t shredder --us-ip {shredder node ip}
-  ```
+```shell
+$ python3 -m hydro.cluster.create_cluster -m 1 -r 1 -f 1 -s 1 --us-ip {shredder node ip}
+```
 
 ## Using Cloudburst Client
 You can manually execute commands or use scripts.

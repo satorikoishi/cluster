@@ -57,4 +57,4 @@ spec:
         - name: USER_STATE_IP
           value: USER_STATE_IP_DUMMY
         - name: USER_STATE_TYPE
-          value: anna
+          value: shredder
