@@ -43,5 +43,6 @@ EOF
 echo "kubectl cp benchmark results..."
 kubectl cp -n $NAMESPACE -c $CONTAINER_SERVER_NAME $POD_NAME:/hydro/cloudburst/log_benchmark.txt ./log_benchmark.txt
 kubectl cp -n $NAMESPACE -c $CONTAINER_SERVER_NAME $POD_NAME:/hydro/cloudburst/benchmark.csv ./benchmark.csv
+kubectl cp -n $NAMESPACE -c $CONTAINER_SERVER_NAME $POD_NAME:/hydro/cloudburst/tput.csv ./tput.csv
 
 echo done!
