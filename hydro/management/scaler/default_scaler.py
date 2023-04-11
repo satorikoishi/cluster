@@ -35,7 +35,7 @@ class DefaultScaler(BaseScaler):
         self.pin_accept_socket = pin_accept_socket
 
     def replicate_function(self, fname, num_replicas, function_locations,
-                           cpu_executors, gpu_executors):
+                           cpu_executors, gpu_executors=None):
 
         existing_replicas = function_locations[fname]
 
