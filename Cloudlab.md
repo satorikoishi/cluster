@@ -70,6 +70,23 @@ Under `~/cluster/` directory:
 ./scripts/run_benchmark.sh {workload}:{num requests}:{args}
 ```
 
+## Inspect logs
+
+### Use scripts
+
+SSH to node0
+
+Under `~/cluster/` directory:
+```shell
+Pod type: b / f / s / m
+
+$ ./scripts/inspect_log.py -t {Pod type}
+
+or
+
+$ ./scripts/inspect_log.py -t {Pod type} -c {Container index} -i {Pod index} -a {Custom suffix}
+```
+
 ## Workloads
 
 ### Micro
