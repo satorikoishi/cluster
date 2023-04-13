@@ -2,8 +2,7 @@
 
 # Define variables
 NAMESPACE="default" # Replace with the actual namespace where the pod is running
-CONTAINER_TRIGGER_NAME="benchmark-2" # Replace with the actual container name
-CONTAINER_SERVER_NAME="benchmark-1" # Replace with the actual container name
+TRIGGER_CONTAINER_NAME="benchmark-2" # Replace with the actual container name
 WORKLOAD="$(echo $1 | cut -d':' -f1)" # Extract workload from the first argument
 NUM_REQUESTS="$(echo $1 | cut -d':' -f2)" # Extract number of requests from the first argument
 ARGS="$(echo $1 | cut -d':' -f3-)" # Extract remaining arguments from the first argument
@@ -30,7 +29,7 @@ fi
 
 # Run command in trigger container
 echo "kubectl exec trigger..."
-kubectl exec -i $POD_NAME -n $NAMESPACE -c $CONTAINER_TRIGGER_NAME -- bash << EOF
+kubectl exec -i $POD_NAME -n $NAMESPACE -c $TRIGGER_CONTAINER_NAME -- bash << EOF
 cd hydro/cloudburst
 export PYTHONPATH=\$(pwd)
 if [ ! -f bench_ips.txt ]; then
@@ -41,8 +40,8 @@ EOF
 
 # Copy benchmark results to the current directory
 echo "kubectl cp benchmark results..."
-kubectl cp -n $NAMESPACE -c $CONTAINER_SERVER_NAME $POD_NAME:/hydro/cloudburst/log_benchmark.txt ./log_benchmark.txt
-kubectl cp -n $NAMESPACE -c $CONTAINER_SERVER_NAME $POD_NAME:/hydro/cloudburst/benchmark.csv ./benchmark.csv
-kubectl cp -n $NAMESPACE -c $CONTAINER_SERVER_NAME $POD_NAME:/hydro/cloudburst/tput.csv ./tput.csv
+kubectl cp -n $NAMESPACE -c $TRIGGER_CONTAINER_NAME $POD_NAME:/hydro/cloudburst/log_trigger.txt ./log_trigger.txt
+kubectl cp -n $NAMESPACE -c $TRIGGER_CONTAINER_NAME $POD_NAME:/hydro/cloudburst/latency.csv ./latency.csv
+kubectl cp -n $NAMESPACE -c $TRIGGER_CONTAINER_NAME $POD_NAME:/hydro/cloudburst/throughput.csv ./throughput.csv
 
 echo done!
