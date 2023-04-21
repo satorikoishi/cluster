@@ -47,7 +47,7 @@ def draw_list_traversal(csv_name):
         label="Shredder",
     )
     plt.plot(anna_data["x"], anna_data["y"], label="Anna")
-    plt.xlabel("Array size")
+    plt.xlabel("Depth")
     plt.ylabel("Median (ms)")
     plt.title("Median over size for E2E Data")
     plt.legend()
