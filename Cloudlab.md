@@ -132,7 +132,7 @@ $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:k_hop:100:2
 
 Before the first run, prepare data:
 ```shell
-$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:1:c
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:1:create
 ```
 
 Run `list_traversal`, args: KVS name, k
@@ -147,4 +147,37 @@ Run `list_traversal` JavaScript RPC version with shredder
 
 ```shell
 $ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:100:shredder:2
+```
+
+### Social network
+
+Before the first run, prepare data:
+```shell
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:list_traversal:1:create
+```
+
+Run `social_network`, args: KVS name, k
+
+Example: issue 100 requests to perform 2-hop queries
+
+```shell
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:social_network:100:anna:2
+```
+
+Run `social_network` all with shredder
+
+```shell
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:social_network:100:shredder:2
+```
+
+Run `social_network` in hybrid mode
+
+```shell
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:social_network:100:hybrid:2
+```
+
+Run `social_network` in tput mode and 1 client per benchmark thread.
+
+```shell
+$ python3 cloudburst/client/benchmark_trigger.py {Benchmark Pod IP}:social_network:1:hybrid:2:tput
 ```
