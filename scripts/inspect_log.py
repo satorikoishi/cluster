@@ -1,12 +1,19 @@
 #!/usr/bin/python3
 import argparse
 import subprocess
+import time
 
 role_dict = {'b': 'benchmark', 'm': 'management', 's': 'scheduler', 'f': 'function'}
 
 def get_param(args):
     role = role_dict[args.type[0]]
+    
     pod_name = subprocess.run(f'kubectl get pods -n default -l role={role} -o jsonpath="{{.items[{args.index}].metadata.name}}"', shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+    
+    while not pod_name:
+        print(f'Pod not found, sleep 10s then try again')
+        time.sleep(10)
+        pod_name = subprocess.run(f'kubectl get pods -n default -l role={role} -o jsonpath="{{.items[{args.index}].metadata.name}}"', shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
     
     container_name = None
     if role == 'benchmark' or role == 'function':
@@ -42,7 +49,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
-    pod_name, container_name, log_name, suffix_args = get_param(args)
-
-    inspect_log(pod_name, container_name, log_name, suffix_args)
+    while True:
+        # If inspect log fails (cluster restarts), redo it
+        pod_name, container_name, log_name, suffix_args = get_param(args)
+        inspect_log(pod_name, container_name, log_name, suffix_args)
     
