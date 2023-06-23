@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 import subprocess
+import sys
 
-profile_cmd = './scripts/run_benchmark.sh profile:'
 num_requests = 1000
 access_count_arr = [1, 2, 4, 8, 16, 32, 64]
 clients = ['anna', 'shredder']
 
-def run_profile():
+def run_profile(bench_name):
+    profile_cmd = f'./scripts/run_benchmark.sh {bench_name}:'
+    
     # # create
     # subprocess.run(f'{profile_cmd}:1:create', shell=True)
     hot_key = 0
@@ -28,4 +30,8 @@ def run_profile():
             subprocess.run(cmd, shell=True)
 
 if __name__ == '__main__':
-    run_profile()
+    if len(sys.argv) > 1:
+        assert sys.argv[1] == 'e'
+        run_profile('profile_executor')
+    else:
+        run_profile('profile')
