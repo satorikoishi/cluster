@@ -42,6 +42,7 @@ EOF
 echo "kubectl cp benchmark results..."
 kubectl cp -n $NAMESPACE -c $TRIGGER_CONTAINER_NAME $POD_NAME:/hydro/cloudburst/log_trigger.txt ./log_trigger.txt
 kubectl cp -n $NAMESPACE -c $TRIGGER_CONTAINER_NAME $POD_NAME:/hydro/cloudburst/latency.csv ./latency.csv
+kubectl cp -n $NAMESPACE -c $TRIGGER_CONTAINER_NAME $POD_NAME:/hydro/cloudburst/exec_latency.csv ./exec_latency.csv
 kubectl cp -n $NAMESPACE -c $TRIGGER_CONTAINER_NAME $POD_NAME:/hydro/cloudburst/throughput.csv ./throughput.csv
 
 echo done!
