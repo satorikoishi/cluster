@@ -15,7 +15,7 @@ def run_batch(bench_name, clients):
     for client_name in clients:
         for access_count in access_count_arr:
             for duration in duration_arr:
-                cmd = f'{func_cmd}{num_requests}:{client_name}:{access_count}:{duration}'
+                cmd = f'{func_cmd}:{num_requests}:{client_name}:{access_count}:{duration}'
                 print(f'Access: {access_count}, Duration: {duration} us, {cmd}')
                 subprocess.run(cmd, shell=True)
 
