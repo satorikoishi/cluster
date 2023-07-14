@@ -24,7 +24,7 @@ if __name__ == '__main__':
         print('Too few args. Usage: ./scripts/run_batch.py {clients}')
         exit(1)
         
-    func_name = sys.argv[1]
+    func_name = 'compute_emulate'
     clients = []
     
     if 'a' in sys.argv[1]:
