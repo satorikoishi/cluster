@@ -2,7 +2,7 @@
 import sys
 import subprocess
 
-files = ['log_trigger.txt', 'latency.csv', 'exec_latency.csv', 'throughput.csv']
+files = ['log_trigger.txt', 'latency.csv', 'detailed_latency.csv', 'exec_detailed_latency.csv', 'exec_latency.csv', 'throughput.csv']
 
 ## Fetch result from Cloudlab to local archive
 def fetch(local_dir):
