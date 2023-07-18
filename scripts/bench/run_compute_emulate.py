@@ -2,7 +2,7 @@
 import subprocess
 import sys
 
-## Example: ./scripts/run_batch.py asr
+## Example: ./scripts/bench/run_compute_emulate.py asr
 
 num_requests = 10000
 access_count_arr = [0,1,2,4,8,16,32]
@@ -21,7 +21,7 @@ def run_batch(bench_name, clients):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('Too few args. Usage: ./scripts/run_batch.py {clients}')
+        print('Too few args. Usage: ./scripts/bench/run_compute_emulate.py {clients}')
         exit(1)
         
     func_name = 'compute_emulate'
