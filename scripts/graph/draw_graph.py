@@ -4,6 +4,7 @@ import numpy as np
 
 from extract import extract_list_traversal_csv, extract_micro_csv
 
+clients = ['anna', 'shredder', 'arbiter']
 
 def draw_micro(csv_name):
     shredder_read, shredder_update = extract_micro_csv("E2E", "shredder", csv_name)
@@ -94,7 +95,6 @@ def draw_facebook_social_bar():
     df = pd.concat([as_df, r_df])
     print(df)
     
-    clients = ['anna', 'shredder', 'arbiter']
     # percent_arr = [0]
     percent_arr = [0, 5, 10, 50, 100]
     for i, percent in enumerate(percent_arr):
@@ -114,6 +114,36 @@ def draw_facebook_social_bar():
             plt.xticks([r + width for r in ind], xaxis)
         plt.legend()
     
+    plt.show()
+    
+def draw_facebook_social_scatter():
+    as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_detailed_latency.csv", header=None)
+    r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_detailed_latency.csv", header=None)
+    df = pd.concat([as_df, r_df])
+    
+    percent_arr = [0, 5, 10, 50, 100]
+    depth_arr = [1, 2, 4, 8, 16]
+    
+    def get_iloc(client, percent, depth):
+        client_i = clients.index(client)
+        percent_i = percent_arr.index(percent)
+        depth_i = depth_arr.index(depth)
+        return client_i * len(percent_arr) * len(depth_arr) + percent_i * len(depth_arr) + depth_i
+    
+    yaxis = [x for x in range(100)]
+    
+    # CDF
+    idx = 1
+    for percent in percent_arr:
+        for depth in depth_arr:
+            plt.subplot(5, 5, idx)
+            for c in clients:
+                df_list = df.iloc[get_iloc(c, percent, depth)].tolist()
+                df_list.sort()
+                cdf = df_list[::100]
+                plt.scatter(cdf, yaxis, s=0.1, label=c)
+            plt.legend()
+            idx += 1
     plt.show()
 
 def draw_arbiter_benefit():
@@ -143,6 +173,7 @@ if __name__ == "__main__":
     
     # draw_compute_emulate_storage_load()
     draw_compute_emulate()
-    draw_facebook_social_bar()
+    # draw_facebook_social_bar()
+    draw_facebook_social_scatter()
     # draw_arbiter_benefit()
     
