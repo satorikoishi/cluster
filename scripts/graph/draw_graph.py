@@ -58,6 +58,9 @@ def draw_list_traversal(csv_name):
     plt.scatter(anna_data["x"], anna_data["y"], color="red", label="Data Points")
     plt.savefig(f"img/list_traversal.png")
     plt.show()
+    
+def draw_compute_emulate():
+    pass
 
 def draw_compute_emulate_storage_load():
     # Read Data
@@ -84,7 +87,36 @@ def draw_compute_emulate_storage_load():
     plt.legend(loc='upper right', markerscale=8)
     plt.show()
     
+def draw_facebook_social():
+    pass
+
+def draw_arbiter_benefit():
+    # Read Data
+    df = pd.read_csv("../data-archive/NDPFaas/arbiter_benefit/redotest-2023-0719/exec_detailed_latency.csv", header=None)
+    df.mask((df > 5.0), inplace=True)
+    anna_line = df.iloc[0].tolist()
+    shredder_line = df.iloc[1].tolist()
+    arbiter_line = df.iloc[2].tolist()
+    disable_line = df.iloc[3].tolist()
+    
+    xaxis = [x for x in range(1000)]
+    
+    # Plt
+    plt.xlabel("Requests")
+    plt.ylabel("Executor Latency (ms)")
+    plt.scatter(xaxis, arbiter_line, s=0.1, label="FaaSPE")
+    plt.scatter(xaxis, disable_line, s=0.1, label="FaaSPE-no-arbiter")
+    plt.scatter(xaxis, anna_line, s=0.1, label="Cloudburst")
+    plt.scatter(xaxis, shredder_line, s=0.1, label="Cloudburst-S")
+    plt.legend(loc='upper right', markerscale=8)
+    plt.show()
+
 if __name__ == "__main__":
     # draw_micro("data/micro.csv")
     # draw_list_traversal("data/list_traversal.csv")
-    draw_compute_emulate_storage_load()
+    
+    # draw_compute_emulate_storage_load()
+    draw_compute_emulate()
+    draw_facebook_social()
+    draw_arbiter_benefit()
+    
