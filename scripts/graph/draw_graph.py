@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 import pandas as pd
+import numpy as np
 
 from extract import extract_list_traversal_csv, extract_micro_csv
 
@@ -87,8 +88,33 @@ def draw_compute_emulate_storage_load():
     plt.legend(loc='upper right', markerscale=8)
     plt.show()
     
-def draw_facebook_social():
-    pass
+def draw_facebook_social_bar():
+    as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_latency.csv")
+    r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_latency.csv")
+    df = pd.concat([as_df, r_df])
+    print(df)
+    
+    clients = ['anna', 'shredder', 'arbiter']
+    # percent_arr = [0]
+    percent_arr = [0, 5, 10, 50, 100]
+    for i, percent in enumerate(percent_arr):
+        ax = plt.subplot(1, len(percent_arr), i + 1)
+        ax.set_ylim(0, 5)
+        
+        ind = np.arange(5)
+        width = 0.25
+        
+        for wi, c in enumerate(clients):
+            sub_df = df[df['ARGS'].str.startswith(f'{c}:{percent}:')]
+            xaxis = sub_df['ARGS'].str.split(':', expand=True)[2]
+            lat_median = sub_df['MEDIAN']
+            # lat_p90 = sub_df['P90']
+            # plt.bar(xaxis, lat_median, label=c)
+            plt.bar(ind + width * wi, lat_median, width, label=c)
+            plt.xticks([r + width for r in ind], xaxis)
+        plt.legend()
+    
+    plt.show()
 
 def draw_arbiter_benefit():
     # Read Data
@@ -117,6 +143,6 @@ if __name__ == "__main__":
     
     # draw_compute_emulate_storage_load()
     draw_compute_emulate()
-    draw_facebook_social()
-    draw_arbiter_benefit()
+    draw_facebook_social_bar()
+    # draw_arbiter_benefit()
     
