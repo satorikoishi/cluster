@@ -9,6 +9,12 @@ label_map = {'anna': 'Cloudburst', 'shredder': 'Cloudburst-S', 'arbiter': 'FaaSP
 percent_arr = [0, 5, 10, 50, 100]
 depth_arr = [1, 2, 4, 8, 16]
 
+def get_iloc(client, percent, depth):
+    client_i = clients.index(client)
+    percent_i = percent_arr.index(percent)
+    depth_i = depth_arr.index(depth)
+    return client_i * len(percent_arr) * len(depth_arr) + percent_i * len(depth_arr) + depth_i
+
 def draw_micro(csv_name):
     shredder_read, shredder_update = extract_micro_csv("E2E", "shredder", csv_name)
     anna_read, anna_update = extract_micro_csv("E2E", "anna", csv_name)
@@ -120,12 +126,6 @@ def draw_facebook_social_scatter_all():
     as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_detailed_latency.csv", header=None)
     r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_detailed_latency.csv", header=None)
     df = pd.concat([as_df, r_df])
-        
-    def get_iloc(client, percent, depth):
-        client_i = clients.index(client)
-        percent_i = percent_arr.index(percent)
-        depth_i = depth_arr.index(depth)
-        return client_i * len(percent_arr) * len(depth_arr) + percent_i * len(depth_arr) + depth_i
     
     skip = 20
     yaxis = [x for x in range(10000 // skip)]
@@ -152,7 +152,54 @@ def draw_facebook_social_scatter_all():
     plt.show()
     
 def draw_facebook_social_specific():
-    pass
+    # bar
+    as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_latency.csv")
+    r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_latency.csv")
+    df = pd.concat([as_df, r_df])
+    
+    spec = [[0, 1], [100, 8]]
+    width = 0.25
+    xaxis = ['GET', 'List_traversal']
+    ind = np.arange(2)
+    
+    for wi, c in enumerate(clients):
+        c_df = pd.DataFrame()
+        for percent, depth in spec:
+            sub_df = df[df['ARGS'] == (f'{c}:{percent}:{depth}')]
+            c_df = pd.concat([c_df, sub_df])
+        c_df = c_df['MEDIAN']
+        plt.bar(ind + width * wi, c_df, width, label=label_map[c])
+            
+    plt.legend()
+    plt.ylabel("Median Latency (ms)")
+    plt.xticks([r + width for r in np.arange(2)], xaxis)
+    plt.ylim(0, 2)
+    plt.show()
+    
+    # scatter
+    as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_detailed_latency.csv", header=None)
+    r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_detailed_latency.csv", header=None)
+    df = pd.concat([as_df, r_df])
+    
+    skip = 10
+    yaxis = np.arange(0, 100, 0.1)
+    
+    # CDF
+    percent = 5
+    depth = 8
+            
+    for c in clients:
+        df_list = df.iloc[get_iloc(c, percent, depth)].tolist()
+        df_list.sort()
+        cdf = df_list[::skip]
+        plt.scatter(cdf, yaxis, s=1, label=label_map[c])
+    
+    plt.xlabel("Execution Latency (ms)")
+    plt.ylabel("Percentage")
+    plt.xlim(0, 3.5)
+    plt.ylim(0, 100)
+    plt.legend(markerscale=8)
+    plt.show()
 
 def draw_arbiter_benefit():
     # Read Data
@@ -181,8 +228,8 @@ if __name__ == "__main__":
     
     # draw_compute_emulate_storage_load()
     draw_compute_emulate()
-    draw_facebook_social_bar_all()
-    draw_facebook_social_scatter_all()
+    # draw_facebook_social_bar_all()
+    # draw_facebook_social_scatter_all()
     draw_facebook_social_specific()
     # draw_arbiter_benefit()
     
