@@ -8,6 +8,7 @@ clients = ['anna', 'shredder', 'arbiter']
 label_map = {'anna': 'Cloudburst', 'shredder': 'Cloudburst-S', 'arbiter': 'FaaSPE'}
 percent_arr = [0, 5, 10, 50, 100]
 depth_arr = [1, 2, 4, 8, 16]
+duration_arr = [10, 100, 10000]
 
 def get_iloc(client, percent, depth):
     client_i = clients.index(client)
@@ -71,7 +72,31 @@ def draw_list_traversal(csv_name):
     plt.show()
     
 def draw_compute_emulate():
-    pass
+    df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-19-overall/exec_latency.csv")
+    
+    for i, duration in enumerate(duration_arr):
+        # ax = plt.subplot(1, len(duration_arr), i + 1)
+        # ax.set_ylim(0, 5)
+        ind = np.arange(len(depth_arr) + 1) # overall average + 1
+        width = 0.2
+        for wi, c in enumerate(clients):
+            c_df = pd.DataFrame()
+            for depth in depth_arr:
+                sub_df = df[df['ARGS'].eq(f'{c}:{depth}:{duration}')]
+                print(f'Duration: {duration}, Depth: {depth}, DF: {sub_df}')
+                c_df = pd.concat([c_df, sub_df])
+                
+            lat_median = c_df['MEDIAN']
+            lat_median['avg'] = lat_median.mean()
+            print(f'Duration: {duration}, Depth: {depth}, Median DF: {lat_median}')
+            
+            plt.bar(ind + width * wi, lat_median, width, label=label_map[c])
+                
+        xaxis = depth_arr + ['Avg']
+        plt.xticks([r + width for r in ind], xaxis)
+        plt.legend()
+    
+        plt.show()
 
 def draw_compute_emulate_storage_load():
     # Read Data
@@ -230,6 +255,6 @@ if __name__ == "__main__":
     draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
-    draw_facebook_social_specific()
+    # draw_facebook_social_specific()
     # draw_arbiter_benefit()
     
