@@ -95,7 +95,8 @@ def draw_compute_emulate():
         xaxis = depth_arr + ['Avg']
         plt.xticks([r + width for r in ind], xaxis)
         plt.legend()
-    
+        plt.xlabel('Dependent Accesses Times')
+        plt.ylabel('Median Latency (ms)')
         plt.show()
 
 def draw_compute_emulate_storage_load():
