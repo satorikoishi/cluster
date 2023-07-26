@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
+import matplotx
 
 from extract import extract_list_traversal_csv, extract_micro_csv
 
@@ -9,6 +10,7 @@ label_map = {'anna': 'Cloudburst', 'shredder': 'Cloudburst-S', 'arbiter': 'FaaSP
 percent_arr = [0, 5, 10, 50, 100]
 depth_arr = [1, 2, 4, 8, 16]
 duration_arr = [10, 100, 10000]
+prefix_savefig = '/home/jw/Paper-prototype/Serverless/figures/evaluation_'
 
 def get_iloc(client, percent, depth):
     client_i = clients.index(client)
@@ -73,6 +75,8 @@ def draw_list_traversal(csv_name):
     
 def draw_compute_emulate():
     df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-19-overall/exec_latency.csv")
+    plt.style.use(matplotx.styles.pacoty)
+    load_names = ['light', 'medium', 'heavy']
     
     for i, duration in enumerate(duration_arr):
         # ax = plt.subplot(1, len(duration_arr), i + 1)
@@ -97,6 +101,7 @@ def draw_compute_emulate():
         plt.legend()
         plt.xlabel('Dependent Accesses Times')
         plt.ylabel('Median Latency (ms)')
+        plt.savefig(f'{prefix_savefig}{load_names[i]}_load.png')
         plt.show()
 
 def draw_compute_emulate_storage_load():
@@ -116,12 +121,14 @@ def draw_compute_emulate_storage_load():
     xaxis = [x for x in range(3000)]
     
     # Plt
+    plt.style.use(matplotx.styles.pacoty)
     plt.xlabel("Requests")
     plt.ylabel("Executor Latency (ms)")
     plt.scatter(xaxis, arbiter_line, s=0.1, label="FaaSPE")
     plt.scatter(xaxis, anna_line, s=0.1, label="Cloudburst")
     plt.scatter(xaxis, shredder_line, s=0.1, label="Cloudburst-S")
     plt.legend(loc='upper right', markerscale=8)
+    plt.savefig(f'{prefix_savefig}storage_load.png')
     plt.show()
     
 def draw_facebook_social_bar_all():
@@ -188,6 +195,8 @@ def draw_facebook_social_specific():
     xaxis = ['GET', 'List_traversal']
     ind = np.arange(2)
     
+    plt.style.use(matplotx.styles.pitaya_smoothie['light'])
+    
     for wi, c in enumerate(clients):
         c_df = pd.DataFrame()
         for percent, depth in spec:
@@ -200,6 +209,7 @@ def draw_facebook_social_specific():
     plt.ylabel("Median Latency (ms)")
     plt.xticks([r + width for r in np.arange(2)], xaxis)
     plt.ylim(0, 2)
+    plt.savefig(f'{prefix_savefig}facebook_social_bar.png')
     plt.show()
     
     # scatter
@@ -225,6 +235,7 @@ def draw_facebook_social_specific():
     plt.xlim(0, 3.5)
     plt.ylim(0, 100)
     plt.legend(markerscale=8)
+    plt.savefig(f'{prefix_savefig}facebook_social_scatter.png')
     plt.show()
 
 def draw_arbiter_benefit():
@@ -239,6 +250,7 @@ def draw_arbiter_benefit():
     xaxis = [x for x in range(1000)]
     
     # Plt
+    plt.style.use(matplotx.styles.pacoty)
     plt.xlabel("Requests")
     plt.ylabel("Executor Latency (ms)")
     plt.scatter(xaxis, arbiter_line, s=0.1, label="FaaSPE")
@@ -246,6 +258,7 @@ def draw_arbiter_benefit():
     plt.scatter(xaxis, anna_line, s=0.1, label="Cloudburst")
     plt.scatter(xaxis, shredder_line, s=0.1, label="Cloudburst-S")
     plt.legend(loc='upper right', markerscale=8)
+    plt.savefig(f'{prefix_savefig}arbiter_benefit.png')
     plt.show()
 
 if __name__ == "__main__":
@@ -253,9 +266,9 @@ if __name__ == "__main__":
     # draw_list_traversal("data/list_traversal.csv")
     
     # draw_compute_emulate_storage_load()
-    draw_compute_emulate()
+    # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
     # draw_facebook_social_specific()
-    # draw_arbiter_benefit()
+    draw_arbiter_benefit()
     
