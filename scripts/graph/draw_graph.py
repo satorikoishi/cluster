@@ -91,7 +91,7 @@ def draw_motivation_compute_emulate():
     plt.legend()
     plt.xlabel('Dependent Accesses Times')
     plt.ylabel('Median Latency (ms)')
-    plt.savefig(f'{prefix_savefig}compute_emulate.png')
+    plt.savefig(f'{prefix_mo_savefig}compute_emulate.png')
     plt.show()
 
 def draw_compute_emulate():
