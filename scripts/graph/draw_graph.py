@@ -11,6 +11,7 @@ percent_arr = [0, 5, 10, 50, 100]
 depth_arr = [1, 2, 4, 8, 16]
 duration_arr = [10, 100, 10000]
 prefix_savefig = '/home/jw/Paper-prototype/Serverless/figures/evaluation_'
+prefix_mo_savefig = '/home/jw/Paper-prototype/Serverless/figures/motivation_'
 
 def get_iloc(client, percent, depth):
     client_i = clients.index(client)
@@ -72,7 +73,27 @@ def draw_list_traversal(csv_name):
     plt.scatter(anna_data["x"], anna_data["y"], color="red", label="Data Points")
     plt.savefig(f"img/list_traversal.png")
     plt.show()
+
+def draw_motivation_compute_emulate():
+    df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-19-overall/exec_latency.csv")
+    duration = 0
+    motivation_label_map = {'anna': 'Function Side', 'shredder': 'Storage Side'}
+    xaxis = [str(x) for x in depth_arr]
     
+    for c in ['anna', 'shredder']:
+        c_df = pd.DataFrame()
+        for depth in depth_arr:
+            sub_df = df[df['ARGS'].eq(f'{c}:{depth}:{duration}')]
+            c_df = pd.concat([c_df, sub_df])
+        
+        lat_median = c_df['MEDIAN']
+        plt.plot(xaxis, np.array(lat_median), label=motivation_label_map[c])
+    plt.legend()
+    plt.xlabel('Dependent Accesses Times')
+    plt.ylabel('Median Latency (ms)')
+    plt.savefig(f'{prefix_savefig}compute_emulate.png')
+    plt.show()
+
 def draw_compute_emulate():
     df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-19-overall/exec_latency.csv")
     plt.style.use(matplotx.styles.pacoty)
@@ -270,5 +291,6 @@ if __name__ == "__main__":
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
     # draw_facebook_social_specific()
-    draw_arbiter_benefit()
+    # draw_arbiter_benefit()
+    draw_motivation_compute_emulate()
     
