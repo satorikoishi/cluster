@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import subprocess
 import sys
+import utils
 
 ## Example: ./scripts/bench/run_facebook_social.py asr
 
@@ -25,13 +26,6 @@ if __name__ == '__main__':
         exit(1)
         
     func_name = 'facebook_social'
-    clients = []
-    
-    if 'a' in sys.argv[1]:
-        clients.append('anna')      # Add anna
-    if 's' in sys.argv[1]:
-        clients.append('shredder')  # Add shredder
-    if 'r' in sys.argv[1]:
-        clients.append('arbiter')   # Add arbiter
+    clients = utils.parse_clients()
     
     run_batch(func_name, clients)
