@@ -32,7 +32,7 @@ if __name__ == '__main__':
         print('Too few args. Usage: ./scripts/bench/run_cache_cold.py {clients}')
         exit(1)
         
-    func_name = 'compute_emulate'
+    func_name = 'cache_cold'
     clients = utils.parse_clients()
     
     run_batch(func_name, clients)
