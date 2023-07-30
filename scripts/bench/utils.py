@@ -7,9 +7,9 @@ def parse_clients():
         clients.append('anna')      # Add anna
     if 's' in sys.argv[1]:
         clients.append('shredder')  # Add shredder
-    if 'r' in sys.argv[1]:
-        clients.append('arbiter')   # Add arbiter
     if 'p' in sys.argv[1]:
         clients.append('pocket')    # Add pocket mock
-    
+    if 'r' in sys.argv[1]:
+        clients.append('arbiter')   # Add arbiter
+        
     return clients
