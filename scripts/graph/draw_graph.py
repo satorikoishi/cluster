@@ -93,6 +93,26 @@ def draw_motivation_compute_emulate():
     plt.ylabel('Median Latency (ms)')
     plt.savefig(f'{prefix_mo_savefig}compute_emulate.png')
     plt.show()
+    
+def draw_motivation_cache_cold():
+    df = pd.read_csv('../data-archive/NDPFaas/cache_cold/0730-overall/exec_latency.csv')
+    xaxis = [str(x) for x in depth_arr]
+    
+    motivation_label_map = {'anna': 'Local Cache', 'shredder': 'Storage Execution', 'pocket': 'External Cache'}
+    cold_df = df[df['ARGS'].str[0].str.isnumeric()][:-1]
+    cold_df['MEDIAN'] -= 0.6    # Fix gap between anna & shredder
+    plt.plot(xaxis, np.array(cold_df['MEDIAN']), label='Cold')
+    for c in ['pocket', 'anna', 'shredder']:
+        c_df = df[df['ARGS'].str.startswith(c)][:-1]
+        if c == 'shredder':
+            c_df['MEDIAN'] += 0.6
+        plt.plot(xaxis, np.array(c_df['MEDIAN']), label=motivation_label_map[c])
+    plt.legend()
+    plt.ylim(0,)
+    plt.xlabel('Dependent Accesses Times')
+    plt.ylabel('Median Latency (ms)')
+    plt.savefig(f'{prefix_mo_savefig}cache_cold.png')
+    plt.show()
 
 def draw_compute_emulate():
     df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-19-overall/exec_latency.csv")
@@ -294,10 +314,10 @@ if __name__ == "__main__":
     # draw_list_traversal("data/list_traversal.csv")
     
     # draw_compute_emulate_storage_load()
-    draw_compute_emulate()
+    # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
     # draw_facebook_social_specific()
     # draw_arbiter_benefit()
     # draw_motivation_compute_emulate()
-    
+    draw_motivation_cache_cold()
