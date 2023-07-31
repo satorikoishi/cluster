@@ -5,7 +5,7 @@ import matplotx
 
 from extract import extract_list_traversal_csv, extract_micro_csv
 
-clients = ['anna', 'shredder', 'arbiter', 'pocket']
+clients = ['pocket', 'anna', 'shredder', 'arbiter']
 label_map = {'anna': 'Cloudburst', 'shredder': 'FaaSPE-S', 'arbiter': 'FaaSPE', 'pocket': 'Pocket-Mock'}
 percent_arr = [0, 5, 10, 50, 100]
 depth_arr = [1, 2, 4, 8, 16]
@@ -96,13 +96,18 @@ def draw_motivation_compute_emulate():
     
 def draw_motivation_cache_cold():
     df = pd.read_csv('../data-archive/NDPFaas/cache_cold/0730-overall/exec_latency.csv')
+    p_df = pd.read_csv('../data-archive/NDPFaas/cache_cold/0731-pocketfix/exec_latency.csv')
+    
     xaxis = [str(x) for x in depth_arr]
     
     motivation_label_map = {'anna': 'Local Cache', 'shredder': 'Storage Execution', 'pocket': 'External Cache'}
     cold_df = df[df['ARGS'].str[0].str.isnumeric()][:-1]
     cold_df['MEDIAN'] -= 0.6    # Fix gap between anna & shredder
     plt.plot(xaxis, np.array(cold_df['MEDIAN']), label='Cold')
-    for c in ['pocket', 'anna', 'shredder']:
+    pocket_df = p_df[p_df['ARGS'].str.startswith('pocket')][:-1]
+    plt.plot(xaxis, np.array(pocket_df['MEDIAN']), label='External Cache')
+    
+    for c in ['anna', 'shredder']:
         c_df = df[df['ARGS'].str.startswith(c)][:-1]
         if c == 'shredder':
             c_df['MEDIAN'] += 0.6
@@ -116,7 +121,7 @@ def draw_motivation_cache_cold():
 
 def draw_compute_emulate():
     df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-19-overall/exec_latency.csv")
-    p_df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-30-pocket/exec_latency.csv")
+    p_df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-31-pocketfix/exec_latency.csv")
     df = pd.concat([df, p_df])
     
     plt.style.use(matplotx.styles.pacoty)
@@ -202,7 +207,7 @@ def draw_facebook_social_bar_all():
 def draw_facebook_social_scatter_all():
     as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_detailed_latency.csv", header=None)
     r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_detailed_latency.csv", header=None)
-    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocket-0730/exec_detailed_latency.csv", header=None)
+    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocketfix-0731/exec_detailed_latency.csv", header=None)
     df = pd.concat([as_df, r_df, p_df])
     
     skip = 20
@@ -233,7 +238,7 @@ def draw_facebook_social_specific():
     # bar
     as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_latency.csv")
     r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_latency.csv")
-    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocket-0730/exec_latency.csv")
+    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocketfix-0731/exec_latency.csv")
     
     df = pd.concat([as_df, r_df, p_df])
     
@@ -255,15 +260,15 @@ def draw_facebook_social_specific():
     plt.legend()
     plt.ylabel("Median Latency (ms)")
     plt.xticks([r + width for r in np.arange(2)], xaxis)
-    plt.ylim(0, 2)
+    plt.ylim(0, 3)
     plt.savefig(f'{prefix_savefig}facebook_social_bar.png')
     plt.show()
     
     # scatter
     as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_detailed_latency.csv", header=None)
     r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_detailed_latency.csv", header=None)
-    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocket-0730/exec_detailed_latency.csv", header=None)
-    df = pd.concat([as_df, r_df, p_df])
+    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocketfix-0731/exec_detailed_latency.csv", header=None)
+    df = pd.concat([p_df, as_df, r_df])
     
     skip = 10
     yaxis = np.arange(0, 100, 0.1)
