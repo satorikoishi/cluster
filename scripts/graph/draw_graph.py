@@ -5,8 +5,8 @@ import matplotx
 
 from extract import extract_list_traversal_csv, extract_micro_csv
 
-clients = ['anna', 'shredder', 'arbiter']
-label_map = {'anna': 'Cloudburst', 'shredder': 'Cloudburst-S', 'arbiter': 'FaaSPE'}
+clients = ['anna', 'shredder', 'arbiter', 'pocket']
+label_map = {'anna': 'Cloudburst', 'shredder': 'FaaSPE-S', 'arbiter': 'FaaSPE', 'pocket': 'Pocket-Mock'}
 percent_arr = [0, 5, 10, 50, 100]
 depth_arr = [1, 2, 4, 8, 16]
 duration_arr = [10, 100, 10000]
@@ -96,6 +96,9 @@ def draw_motivation_compute_emulate():
 
 def draw_compute_emulate():
     df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-19-overall/exec_latency.csv")
+    p_df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-30-pocket/exec_latency.csv")
+    df = pd.concat([df, p_df])
+    
     plt.style.use(matplotx.styles.pacoty)
     load_names = ['light', 'medium', 'heavy']
     
@@ -103,7 +106,7 @@ def draw_compute_emulate():
         # ax = plt.subplot(1, len(duration_arr), i + 1)
         # ax.set_ylim(0, 5)
         ind = np.arange(len(depth_arr) + 1) # overall average + 1
-        width = 0.2
+        width = 0.15
         for wi, c in enumerate(clients):
             c_df = pd.DataFrame()
             for depth in depth_arr:
@@ -179,7 +182,8 @@ def draw_facebook_social_bar_all():
 def draw_facebook_social_scatter_all():
     as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_detailed_latency.csv", header=None)
     r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_detailed_latency.csv", header=None)
-    df = pd.concat([as_df, r_df])
+    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocket-0730/exec_detailed_latency.csv", header=None)
+    df = pd.concat([as_df, r_df, p_df])
     
     skip = 20
     yaxis = [x for x in range(10000 // skip)]
@@ -209,10 +213,12 @@ def draw_facebook_social_specific():
     # bar
     as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_latency.csv")
     r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_latency.csv")
-    df = pd.concat([as_df, r_df])
+    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocket-0730/exec_latency.csv")
+    
+    df = pd.concat([as_df, r_df, p_df])
     
     spec = [[0, 1], [100, 8]]
-    width = 0.25
+    width = 0.2
     xaxis = ['GET', 'List_traversal']
     ind = np.arange(2)
     
@@ -236,7 +242,8 @@ def draw_facebook_social_specific():
     # scatter
     as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_detailed_latency.csv", header=None)
     r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_detailed_latency.csv", header=None)
-    df = pd.concat([as_df, r_df])
+    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocket-0730/exec_detailed_latency.csv", header=None)
+    df = pd.concat([as_df, r_df, p_df])
     
     skip = 10
     yaxis = np.arange(0, 100, 0.1)
@@ -287,10 +294,10 @@ if __name__ == "__main__":
     # draw_list_traversal("data/list_traversal.csv")
     
     # draw_compute_emulate_storage_load()
-    # draw_compute_emulate()
+    draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
     # draw_facebook_social_specific()
     # draw_arbiter_benefit()
-    draw_motivation_compute_emulate()
+    # draw_motivation_compute_emulate()
     
