@@ -103,7 +103,7 @@ def draw_motivation_cache_cold():
     motivation_label_map = {'anna': 'Local Cache', 'shredder': 'Storage Execution', 'pocket': 'External Cache'}
     cold_df = df[df['ARGS'].str[0].str.isnumeric()][:-1]
     cold_df['MEDIAN'] -= 0.6    # Fix gap between anna & shredder
-    plt.plot(xaxis, np.array(cold_df['MEDIAN']), label='Cold')
+    plt.plot(xaxis, np.array(cold_df['MEDIAN']), label='Remote Storage')
     pocket_df = p_df[p_df['ARGS'].str.startswith('pocket')][:-1]
     plt.plot(xaxis, np.array(pocket_df['MEDIAN']), label='External Cache')
     
