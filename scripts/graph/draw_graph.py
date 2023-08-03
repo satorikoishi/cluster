@@ -136,7 +136,7 @@ def draw_compute_emulate():
             c_df = pd.DataFrame()
             for depth in depth_arr:
                 sub_df = df[df['ARGS'].eq(f'{c}:{depth}:{duration}')]
-                print(f'Duration: {duration}, Depth: {depth}, DF: {sub_df}')
+                # print(f'Duration: {duration}, Depth: {depth}, DF: {sub_df}')
                 c_df = pd.concat([c_df, sub_df])
                 
             lat_median = c_df['MEDIAN']
@@ -242,7 +242,8 @@ def draw_facebook_social_specific():
     
     df = pd.concat([as_df, r_df, p_df])
     
-    spec = [[0, 1], [100, 8]]
+    general_spec = [[0, 1], [100, 8]]
+    shredder_spec = [[50, 1], [50, 8]]
     width = 0.2
     xaxis = ['GET', 'List_traversal']
     ind = np.arange(2)
@@ -251,6 +252,10 @@ def draw_facebook_social_specific():
     
     for wi, c in enumerate(clients):
         c_df = pd.DataFrame()
+        if c == 'shredder':
+            spec = shredder_spec
+        else:
+            spec = general_spec
         for percent, depth in spec:
             sub_df = df[df['ARGS'] == (f'{c}:{percent}:{depth}')]
             c_df = pd.concat([c_df, sub_df])
@@ -322,7 +327,7 @@ if __name__ == "__main__":
     # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
-    # draw_facebook_social_specific()
+    draw_facebook_social_specific()
     # draw_arbiter_benefit()
     # draw_motivation_compute_emulate()
-    draw_motivation_cache_cold()
+    # draw_motivation_cache_cold()
