@@ -13,6 +13,8 @@ duration_arr = [10, 100, 10000]
 prefix_savefig = '/home/jw/Paper-prototype/Serverless/figures/evaluation_'
 prefix_mo_savefig = '/home/jw/Paper-prototype/Serverless/figures/motivation_'
 
+color_theme = [(20/255, 54/255, 95/255), (118/255, 162/255, 185/255), (248/255, 242/255, 236/255), (214/255, 79/255, 56/255)]
+
 def get_iloc(client, percent, depth):
     client_i = clients.index(client)
     percent_i = percent_arr.index(percent)
@@ -170,12 +172,14 @@ def draw_compute_emulate_storage_load():
     xaxis = [x for x in range(3000)]
     
     # Plt
-    plt.style.use(matplotx.styles.pacoty)
+    # plt.style.use(matplotx.styles.pacoty)
+    # plt.gcf().set_facecolor('white')
+    plt.grid(True)
     plt.xlabel("Requests")
     plt.ylabel("Executor Latency (ms)")
-    plt.scatter(xaxis, arbiter_line, s=0.1, label="FaaSPE")
-    plt.scatter(xaxis, anna_line, s=0.1, label="Cloudburst")
-    plt.scatter(xaxis, shredder_line, s=0.1, label="Cloudburst-S")
+    plt.scatter(xaxis, anna_line, s=0.1, label="Cloudburst", color=color_theme[1])
+    plt.scatter(xaxis, shredder_line, s=0.1, label="FaaSPE-S", color=color_theme[0])
+    plt.scatter(xaxis, arbiter_line, s=0.1, label="FaaSPE", color=color_theme[3])
     plt.legend(loc='upper right', markerscale=8)
     plt.savefig(f'{prefix_savefig}storage_load.png')
     plt.show()
@@ -204,35 +208,35 @@ def draw_facebook_social_bar_all():
     
     plt.show()
     
-def draw_facebook_social_scatter_all():
-    as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_detailed_latency.csv", header=None)
-    r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_detailed_latency.csv", header=None)
-    p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocketfix-0731/exec_detailed_latency.csv", header=None)
-    df = pd.concat([as_df, r_df, p_df])
+# def draw_facebook_social_scatter_all():
+#     as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_detailed_latency.csv", header=None)
+#     r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_detailed_latency.csv", header=None)
+#     p_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/pocketfix-0731/exec_detailed_latency.csv", header=None)
+#     df = pd.concat([as_df, r_df, p_df])
     
-    skip = 20
-    yaxis = [x for x in range(10000 // skip)]
+#     skip = 20
+#     yaxis = [x for x in range(10000 // skip)]
     
-    # CDF
-    idx = 1
-    for percent in percent_arr:
-        for depth in depth_arr:
-            plt.subplot(5, 5, idx)
-            overall = []
-            for c in clients:
-                df_list = df.iloc[get_iloc(c, percent, depth)].tolist()
-                overall.append(sum(df_list))
-                df_list.sort()
-                cdf = df_list[::skip]
-                plt.scatter(cdf, yaxis, s=0.1, label=label_map[c])
-            if overall[2] < overall[1] and overall[2] < overall[0]:
-                anna_reduce = (overall[0] - overall[2]) / overall[0]
-                shredder_reduce = (overall[1] - overall[2]) / overall[1]
-                print(f'Percent: {percent}, Depth: {depth}, Reduce: {anna_reduce * 100}, {shredder_reduce * 100}')
-            # print(f'Percent: {percent}, Depth: {depth}, Overall: {overall}')
-            plt.legend()
-            idx += 1
-    plt.show()
+#     # CDF
+#     idx = 1
+#     for percent in percent_arr:
+#         for depth in depth_arr:
+#             plt.subplot(5, 5, idx)
+#             overall = []
+#             for c in clients:
+#                 df_list = df.iloc[get_iloc(c, percent, depth)].tolist()
+#                 overall.append(sum(df_list))
+#                 df_list.sort()
+#                 cdf = df_list[::skip]
+#                 plt.scatter(cdf, yaxis, s=0.1, label=label_map[c])
+#             if overall[2] < overall[1] and overall[2] < overall[0]:
+#                 anna_reduce = (overall[0] - overall[2]) / overall[0]
+#                 shredder_reduce = (overall[1] - overall[2]) / overall[1]
+#                 print(f'Percent: {percent}, Depth: {depth}, Reduce: {anna_reduce * 100}, {shredder_reduce * 100}')
+#             # print(f'Percent: {percent}, Depth: {depth}, Overall: {overall}')
+#             plt.legend()
+#             idx += 1
+#     plt.show()
     
 def draw_facebook_social_specific():
     # bar
@@ -281,12 +285,24 @@ def draw_facebook_social_specific():
     # CDF
     percent = 5
     depth = 8
+    
+    overall = []
             
     for c in clients:
-        df_list = df.iloc[get_iloc(c, percent, depth)].tolist()
+        if c == 'shredder':
+            df_list = df.iloc[get_iloc(c, 50, 1)].tolist()
+        else:
+            df_list = df.iloc[get_iloc(c, percent, depth)].tolist()
+        overall.append(sum(df_list))
+        
         df_list.sort()
         cdf = df_list[::skip]
         plt.scatter(cdf, yaxis, s=1, label=label_map[c])
+    
+    pocket_reduce = 1 - overall[3] / overall[0]
+    anna_reduce = 1 - overall[3] / overall[1]
+    shredder_reduce = 1 - overall[3] / overall[2]
+    print(f'Percent: {percent}, Depth: {depth}, Reduce: {pocket_reduce * 100}, {anna_reduce * 100}, {shredder_reduce * 100}')
     
     plt.xlabel("Execution Latency (ms)")
     plt.ylabel("Percentage")
@@ -323,11 +339,11 @@ if __name__ == "__main__":
     # draw_micro("data/micro.csv")
     # draw_list_traversal("data/list_traversal.csv")
     
-    # draw_compute_emulate_storage_load()
+    draw_compute_emulate_storage_load()
     # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
-    draw_facebook_social_specific()
+    # draw_facebook_social_specific()
     # draw_arbiter_benefit()
     # draw_motivation_compute_emulate()
     # draw_motivation_cache_cold()
