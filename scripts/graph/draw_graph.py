@@ -154,7 +154,7 @@ def draw_compute_emulate():
                 plt.ylim(6, 16)
                 
         xaxis = depth_arr + ['Avg']
-        plt.xticks([r + width for r in ind], xaxis)
+        plt.xticks([r + 1.5 * gap for r in ind], xaxis)
         plt.legend()
         # plt.grid(True)
         plt.xlabel('Dependent Accesses Times')
@@ -276,7 +276,7 @@ def draw_facebook_social_specific():
             
     plt.legend()
     plt.ylabel("Median Latency (ms)")
-    plt.xticks([r + width for r in np.arange(2)], xaxis)
+    plt.xticks([r + 1.5 * gap for r in np.arange(2)], xaxis)
     plt.ylim(0, 3)
     plt.savefig(f'{prefix_savefig}facebook_social_bar.png')
     plt.show()
@@ -341,6 +341,7 @@ def draw_arbiter_benefit():
     plt.scatter(xaxis, disable_line, s=1, label="FaaSPE-no-arbiter",color=color_theme['pocket'])
     plt.scatter(xaxis, arbiter_line, s=1, label="FaaSPE",color=color_theme['arbiter'])
     plt.legend(loc='upper right', markerscale=8)
+    plt.grid(True)
     plt.savefig(f'{prefix_savefig}arbiter_benefit.png')
     plt.show()
 
