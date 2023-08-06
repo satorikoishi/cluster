@@ -13,7 +13,8 @@ duration_arr = [10, 100, 10000]
 prefix_savefig = '/home/jw/Paper-prototype/Serverless/figures/evaluation_'
 prefix_mo_savefig = '/home/jw/Paper-prototype/Serverless/figures/motivation_'
 
-color_theme = [(20/255, 54/255, 95/255), (118/255, 162/255, 185/255), (248/255, 242/255, 236/255), (214/255, 79/255, 56/255)]
+color_theme = {'pocket': (20/255, 54/255, 95/255), 'anna': (118/255, 162/255, 185/255), 'shredder': (191/255, 217/255, 229/255), 'arbiter': (214/255, 79/255, 56/255)}
+color_theme_sub = {'anna': (20/255, 54/255, 95/255), 'shredder': (118/255, 162/255, 185/255), 'arbiter': (214/255, 79/255, 56/255)}
 
 def get_iloc(client, percent, depth):
     client_i = clients.index(client)
@@ -126,14 +127,15 @@ def draw_compute_emulate():
     p_df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-31-pocketfix/exec_latency.csv")
     df = pd.concat([df, p_df])
     
-    plt.style.use(matplotx.styles.pacoty)
+    # plt.style.use(matplotx.styles.pacoty)
     load_names = ['light', 'medium', 'heavy']
     
     for i, duration in enumerate(duration_arr):
         # ax = plt.subplot(1, len(duration_arr), i + 1)
         # ax.set_ylim(0, 5)
         ind = np.arange(len(depth_arr) + 1) # overall average + 1
-        width = 0.15
+        width = 0.12
+        gap = 0.2
         for wi, c in enumerate(clients):
             c_df = pd.DataFrame()
             for depth in depth_arr:
@@ -145,11 +147,13 @@ def draw_compute_emulate():
             lat_median['avg'] = lat_median.mean()
             print(f'Duration: {duration}, Depth: {depth}, Median DF: {lat_median}')
             
-            plt.bar(ind + width * wi, lat_median, width, label=label_map[c])
+            bar = plt.bar(ind + gap * wi, lat_median, width, label=label_map[c], color=color_theme[c])
+            plt.bar_label(bar, fmt='%.1f', fontsize=8)
                 
         xaxis = depth_arr + ['Avg']
         plt.xticks([r + width for r in ind], xaxis)
         plt.legend()
+        # plt.grid(True)
         plt.xlabel('Dependent Accesses Times')
         plt.ylabel('Median Latency (ms)')
         plt.savefig(f'{prefix_savefig}{load_names[i]}_load.png')
@@ -177,9 +181,9 @@ def draw_compute_emulate_storage_load():
     plt.grid(True)
     plt.xlabel("Requests")
     plt.ylabel("Executor Latency (ms)")
-    plt.scatter(xaxis, anna_line, s=0.1, label="Cloudburst", color=color_theme[1])
-    plt.scatter(xaxis, shredder_line, s=0.1, label="FaaSPE-S", color=color_theme[0])
-    plt.scatter(xaxis, arbiter_line, s=0.1, label="FaaSPE", color=color_theme[3])
+    plt.scatter(xaxis, anna_line, s=0.1, label="Cloudburst", color=color_theme_sub['anna'])
+    plt.scatter(xaxis, shredder_line, s=0.1, label="FaaSPE-S", color=color_theme_sub['shredder'])
+    plt.scatter(xaxis, arbiter_line, s=0.1, label="FaaSPE", color=color_theme_sub['arbiter'])
     plt.legend(loc='upper right', markerscale=8)
     plt.savefig(f'{prefix_savefig}storage_load.png')
     plt.show()
@@ -339,8 +343,8 @@ if __name__ == "__main__":
     # draw_micro("data/micro.csv")
     # draw_list_traversal("data/list_traversal.csv")
     
-    draw_compute_emulate_storage_load()
-    # draw_compute_emulate()
+    # draw_compute_emulate_storage_load()
+    draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
     # draw_facebook_social_specific()
