@@ -135,7 +135,7 @@ def draw_compute_emulate():
         # ax.set_ylim(0, 5)
         ind = np.arange(len(depth_arr) + 1) # overall average + 1
         width = 0.12
-        gap = 0.2
+        gap = 0.15
         for wi, c in enumerate(clients):
             c_df = pd.DataFrame()
             for depth in depth_arr:
@@ -148,7 +148,10 @@ def draw_compute_emulate():
             print(f'Duration: {duration}, Depth: {depth}, Median DF: {lat_median}')
             
             bar = plt.bar(ind + gap * wi, lat_median, width, label=label_map[c], color=color_theme[c])
-            plt.bar_label(bar, fmt='%.1f', fontsize=8)
+            # plt.bar_label(bar, fmt='%.1f', fontsize=8)
+            # Heavy load
+            if i == 2:
+                plt.ylim(6, 16)
                 
         xaxis = depth_arr + ['Avg']
         plt.xticks([r + width for r in ind], xaxis)
@@ -252,11 +255,12 @@ def draw_facebook_social_specific():
     
     general_spec = [[0, 1], [100, 8]]
     shredder_spec = [[50, 1], [50, 8]]
-    width = 0.2
+    width = 0.12
+    gap = 0.15
     xaxis = ['GET', 'List_traversal']
     ind = np.arange(2)
     
-    plt.style.use(matplotx.styles.pitaya_smoothie['light'])
+    # plt.style.use(matplotx.styles.pitaya_smoothie['light'])
     
     for wi, c in enumerate(clients):
         c_df = pd.DataFrame()
@@ -268,7 +272,7 @@ def draw_facebook_social_specific():
             sub_df = df[df['ARGS'] == (f'{c}:{percent}:{depth}')]
             c_df = pd.concat([c_df, sub_df])
         c_df = c_df['MEDIAN']
-        plt.bar(ind + width * wi, c_df, width, label=label_map[c])
+        plt.bar(ind + gap * wi, c_df, width, label=label_map[c], color=color_theme[c])
             
     plt.legend()
     plt.ylabel("Median Latency (ms)")
@@ -301,7 +305,8 @@ def draw_facebook_social_specific():
         
         df_list.sort()
         cdf = df_list[::skip]
-        plt.scatter(cdf, yaxis, s=1, label=label_map[c])
+        plt.scatter(cdf, yaxis, s=1, label=label_map[c], color=color_theme[c])
+        plt.plot(cdf, yaxis, color=color_theme[c])
     
     pocket_reduce = 1 - overall[3] / overall[0]
     anna_reduce = 1 - overall[3] / overall[1]
@@ -328,13 +333,13 @@ def draw_arbiter_benefit():
     xaxis = [x for x in range(1000)]
     
     # Plt
-    plt.style.use(matplotx.styles.pacoty)
+    # plt.style.use(matplotx.styles.pacoty)
     plt.xlabel("Requests")
     plt.ylabel("Executor Latency (ms)")
-    plt.scatter(xaxis, arbiter_line, s=0.1, label="FaaSPE")
-    plt.scatter(xaxis, disable_line, s=0.1, label="FaaSPE-no-arbiter")
-    plt.scatter(xaxis, anna_line, s=0.1, label="Cloudburst")
-    plt.scatter(xaxis, shredder_line, s=0.1, label="Cloudburst-S")
+    plt.scatter(xaxis, anna_line, s=1, label="Cloudburst",color=color_theme['anna'])
+    plt.scatter(xaxis, shredder_line, s=1, label="FaaSPE-S",color=color_theme['shredder'])
+    plt.scatter(xaxis, disable_line, s=1, label="FaaSPE-no-arbiter",color=color_theme['pocket'])
+    plt.scatter(xaxis, arbiter_line, s=1, label="FaaSPE",color=color_theme['arbiter'])
     plt.legend(loc='upper right', markerscale=8)
     plt.savefig(f'{prefix_savefig}arbiter_benefit.png')
     plt.show()
@@ -344,10 +349,10 @@ if __name__ == "__main__":
     # draw_list_traversal("data/list_traversal.csv")
     
     # draw_compute_emulate_storage_load()
-    draw_compute_emulate()
+    # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
     # draw_facebook_social_specific()
-    # draw_arbiter_benefit()
+    draw_arbiter_benefit()
     # draw_motivation_compute_emulate()
     # draw_motivation_cache_cold()
