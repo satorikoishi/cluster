@@ -95,10 +95,12 @@ def draw_motivation_compute_emulate():
     plt.legend()
     plt.xlabel('Dependent Accesses Times')
     plt.ylabel('Median Latency (ms)')
-    plt.savefig(f'{prefix_mo_savefig}compute_emulate.png')
+    plt.gcf().set_size_inches(8,4)
+    plt.savefig(f'{prefix_mo_savefig}compute_emulate.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
     
 def draw_motivation_cache_cold():
+    plt.rc('font', size=16)
     # List traversal
     df = pd.read_csv('../data-archive/NDPFaas/cache_cold/0730-overall/exec_latency.csv')
     p_df = pd.read_csv('../data-archive/NDPFaas/cache_cold/0731-pocketfix/exec_latency.csv')
@@ -125,7 +127,7 @@ def draw_motivation_cache_cold():
     plt.ylim(0,)
     plt.xlabel('Depth')
     plt.ylabel('Median Latency (ms)')
-    plt.savefig(f'{prefix_mo_savefig}cache_cold.png')
+    plt.savefig(f'{prefix_mo_savefig}cache_cold.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
     
     # K hop
@@ -144,13 +146,14 @@ def draw_motivation_cache_cold():
     # plt.yscale('log')
     plt.xlabel('K')
     plt.ylabel('Median Latency (ms)')
-    plt.savefig(f'{prefix_mo_savefig}cache_cold_k_hop.png')
+    plt.savefig(f'{prefix_mo_savefig}cache_cold_k_hop.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
 
 def draw_compute_emulate():
     df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-19-overall/exec_latency.csv")
     p_df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-31-pocketfix/exec_latency.csv")
     df = pd.concat([df, p_df])
+    plt.rc('font', size=12)
     
     # plt.style.use(matplotx.styles.pacoty)
     load_names = ['light', 'medium', 'heavy']
@@ -184,7 +187,7 @@ def draw_compute_emulate():
         # plt.grid(True)
         plt.xlabel('Dependent Accesses Times')
         plt.ylabel('Median Latency (ms)')
-        plt.savefig(f'{prefix_savefig}{load_names[i]}_load.png')
+        plt.savefig(f'{prefix_savefig}{load_names[i]}_load.png',bbox_inches='tight',pad_inches = 0.02)
         plt.show()
 
 def draw_compute_emulate_storage_load():
@@ -202,6 +205,7 @@ def draw_compute_emulate_storage_load():
     for i in range(0, 3):
         arbiter_line = arbiter_line + (df.iloc[i].tolist())
     xaxis = [x for x in range(3000)]
+    plt.rc('font', size=16)
     
     # Plt
     # plt.style.use(matplotx.styles.pacoty)
@@ -212,8 +216,9 @@ def draw_compute_emulate_storage_load():
     plt.scatter(xaxis, anna_line, s=0.1, label="Cloudburst", color=color_theme_sub['anna'])
     plt.scatter(xaxis, shredder_line, s=0.1, label="FaaSPE-S", color=color_theme_sub['shredder'])
     plt.scatter(xaxis, arbiter_line, s=0.1, label="FaaSPE", color=color_theme_sub['arbiter'])
-    plt.legend(loc='upper right', markerscale=8)
-    plt.savefig(f'{prefix_savefig}storage_load.png')
+    plt.legend(loc='upper right', markerscale=32)
+    plt.gcf().set_size_inches(10,4)
+    plt.savefig(f'{prefix_savefig}storage_load.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
     
 def draw_facebook_social_bar_all():
@@ -271,6 +276,7 @@ def draw_facebook_social_bar_all():
 #     plt.show()
     
 def draw_facebook_social_specific():
+    plt.rc('font', size=20)
     # bar
     as_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/anna_shredder/exec_latency.csv")
     r_df = pd.read_csv("../data-archive/NDPFaas/facebook_social/arbiter-0719-fix/exec_latency.csv")
@@ -303,7 +309,7 @@ def draw_facebook_social_specific():
     plt.ylabel("Median Latency (ms)")
     plt.xticks([r + 1.5 * gap for r in np.arange(2)], xaxis)
     plt.ylim(0, 3)
-    plt.savefig(f'{prefix_savefig}facebook_social_bar.png')
+    plt.savefig(f'{prefix_savefig}facebook_social_bar.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
     
     # scatter
@@ -342,11 +348,12 @@ def draw_facebook_social_specific():
     plt.ylabel("Percentage")
     plt.xlim(0, 3.5)
     plt.ylim(0, 100)
-    plt.legend(markerscale=8)
-    plt.savefig(f'{prefix_savefig}facebook_social_scatter.png')
+    plt.legend(markerscale=16)
+    plt.savefig(f'{prefix_savefig}facebook_social_scatter.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
 
 def draw_arbiter_benefit():
+    plt.rc('font', size=16)
     # Read Data
     df = pd.read_csv("../data-archive/NDPFaas/arbiter_benefit/redotest-2023-0719/exec_detailed_latency.csv", header=None)
     df.mask((df > 5.0), inplace=True)
@@ -367,10 +374,12 @@ def draw_arbiter_benefit():
     plt.scatter(xaxis, arbiter_line, s=1, label="FaaSPE",color=color_theme['arbiter'])
     plt.legend(loc='upper right', markerscale=8)
     plt.grid(True)
-    plt.savefig(f'{prefix_savefig}arbiter_benefit.png')
+    plt.gcf().set_size_inches(10, 4)
+    plt.savefig(f'{prefix_savefig}arbiter_benefit.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
 
 if __name__ == "__main__":
+    # plt.rcParams['figure.dpi'] = 100
     # draw_micro("data/micro.csv")
     # draw_list_traversal("data/list_traversal.csv")
     
@@ -378,7 +387,7 @@ if __name__ == "__main__":
     # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
-    # draw_facebook_social_specific()
+    draw_facebook_social_specific()
     # draw_arbiter_benefit()
-    draw_motivation_compute_emulate()
+    # draw_motivation_compute_emulate()
     # draw_motivation_cache_cold()
