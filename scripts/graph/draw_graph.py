@@ -98,28 +98,52 @@ def draw_motivation_compute_emulate():
     plt.show()
     
 def draw_motivation_cache_cold():
+    # List traversal
     df = pd.read_csv('../data-archive/NDPFaas/cache_cold/0730-overall/exec_latency.csv')
     p_df = pd.read_csv('../data-archive/NDPFaas/cache_cold/0731-pocketfix/exec_latency.csv')
     
     xaxis = [str(x) for x in depth_arr]
     
-    motivation_label_map = {'anna': 'Local Cache', 'shredder': 'Storage Execution', 'pocket': 'External Cache'}
+    # motivation_label_map = {'anna': 'Local Cache', 'shredder': 'Storage Execution', 'pocket': 'External Cache'}
     cold_df = df[df['ARGS'].str[0].str.isnumeric()][:-1]
     cold_df['MEDIAN'] -= 0.6    # Fix gap between anna & shredder
-    plt.plot(xaxis, np.array(cold_df['MEDIAN']), label='Remote Storage')
-    pocket_df = p_df[p_df['ARGS'].str.startswith('pocket')][:-1]
-    plt.plot(xaxis, np.array(pocket_df['MEDIAN']), label='External Cache')
     
-    for c in ['anna', 'shredder']:
-        c_df = df[df['ARGS'].str.startswith(c)][:-1]
-        if c == 'shredder':
-            c_df['MEDIAN'] += 0.6
-        plt.plot(xaxis, np.array(c_df['MEDIAN']), label=motivation_label_map[c])
-    plt.legend()
+    single_access_latency = cold_df['MEDIAN'][0]
+    plt.axhline(y=single_access_latency, linestyle='--', color='black', label='Storage Access Latency')
+    
+    plt.plot(xaxis, np.array(cold_df['MEDIAN']), label='Remote Storage', color=color_theme_sub['arbiter'], marker='o')
+    pocket_df = p_df[p_df['ARGS'].str.startswith('pocket')][:-1]
+    plt.plot(xaxis, np.array(pocket_df['MEDIAN']), label='External Cache', color=color_theme_sub['anna'], marker='^')
+    anna_df = df[df['ARGS'].str.startswith('anna')][:-1]
+    plt.plot(xaxis, np.array(anna_df['MEDIAN']), label='Local Cache', color=color_theme_sub['shredder'], marker='s')
+    
+    handles, labels = plt.gca().get_legend_handles_labels()
+    # print(handles, labels)
+    order = [1, 2, 3, 0]
+    plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order])
     plt.ylim(0,)
-    plt.xlabel('Dependent Accesses Times')
+    plt.xlabel('Depth')
     plt.ylabel('Median Latency (ms)')
     plt.savefig(f'{prefix_mo_savefig}cache_cold.png')
+    plt.show()
+    
+    # K hop
+    df = pd.read_csv('../data-archive/NDPFaas/k_hop/2023-0807/exec_latency.csv')
+    xaxis = [str(x) for x in range(3)]
+    cold_df = df[df['ARGS'].str[0].str.isnumeric()]
+    cold_df['MEDIAN'] -= 0.6    # Fix gap between anna & shredder
+    plt.plot(xaxis, np.array(cold_df['MEDIAN']), label='Remote Storage', color=color_theme_sub['arbiter'], marker='o')
+    pocket_df = df[df['ARGS'].str.startswith('pocket')]
+    plt.plot(xaxis, np.array(pocket_df['MEDIAN']), label='External Cache', color=color_theme_sub['anna'], marker='^')
+    anna_df = df[df['ARGS'].str.startswith('anna')]
+    plt.plot(xaxis, np.array(anna_df['MEDIAN']), label='Local Cache', color=color_theme_sub['shredder'], marker='s')
+    
+    plt.legend()
+    plt.ylim(0,)
+    # plt.yscale('log')
+    plt.xlabel('K')
+    plt.ylabel('Median Latency (ms)')
+    plt.savefig(f'{prefix_mo_savefig}cache_cold_k_hop.png')
     plt.show()
 
 def draw_compute_emulate():
@@ -354,6 +378,6 @@ if __name__ == "__main__":
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
     # draw_facebook_social_specific()
-    draw_arbiter_benefit()
+    # draw_arbiter_benefit()
     # draw_motivation_compute_emulate()
-    # draw_motivation_cache_cold()
+    draw_motivation_cache_cold()
