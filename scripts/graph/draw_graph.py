@@ -78,19 +78,20 @@ def draw_list_traversal(csv_name):
     plt.show()
 
 def draw_motivation_compute_emulate():
-    df = pd.read_csv("../data-archive/NDPFaas/compute_emulate/2023-07-19-overall/exec_latency.csv")
-    duration = 0
-    motivation_label_map = {'anna': 'Function Side', 'shredder': 'Storage Side'}
+    df = pd.read_csv("../data-archive/NDPFaas/motivation_compute_emulate/2023-0807-cache-storage/exec_latency.csv")
+    load_df = pd.read_csv("../data-archive/NDPFaas/motivation_compute_emulate/2023-0807-storage-load/exec_latency.csv")
+    # duration = 0
+    # motivation_label_map = {'anna': 'Function Side', 'shredder': 'Storage Side'}
     xaxis = [str(x) for x in depth_arr]
     
-    for c in ['anna', 'shredder']:
-        c_df = pd.DataFrame()
-        for depth in depth_arr:
-            sub_df = df[df['ARGS'].eq(f'{c}:{depth}:{duration}')]
-            c_df = pd.concat([c_df, sub_df])
-        
-        lat_median = c_df['MEDIAN']
-        plt.plot(xaxis, np.array(lat_median), label=motivation_label_map[c])
+    anna_df = df[df['ARGS'].str.startswith('anna')]
+    plt.plot(xaxis, np.array(anna_df['MEDIAN']), label='Function Side', color=color_theme['arbiter'], marker='o')
+    shredder_df = df[df['ARGS'].str.startswith('shredder')]
+    plt.plot(xaxis, np.array(shredder_df['MEDIAN']), label='Storage Side', color=color_theme['shredder'], marker='^')
+    load_8_df = load_df.iloc[0:5]
+    load_4_df = load_df.iloc[5:10]
+    plt.plot(xaxis, np.array(load_4_df['MEDIAN']), label='Storage Side (Load 4)', color=color_theme['anna'], marker='*')
+    plt.plot(xaxis, np.array(load_8_df['MEDIAN']), label='Function Side (Load 8)', color=color_theme['pocket'], marker='s')
     plt.legend()
     plt.xlabel('Dependent Accesses Times')
     plt.ylabel('Median Latency (ms)')
@@ -379,5 +380,5 @@ if __name__ == "__main__":
     # draw_facebook_social_scatter_all()
     # draw_facebook_social_specific()
     # draw_arbiter_benefit()
-    # draw_motivation_compute_emulate()
-    draw_motivation_cache_cold()
+    draw_motivation_compute_emulate()
+    # draw_motivation_cache_cold()
