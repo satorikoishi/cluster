@@ -288,7 +288,7 @@ def draw_facebook_social_specific():
     shredder_spec = [[50, 1], [50, 8]]
     width = 0.12
     gap = 0.15
-    xaxis = ['GET', 'List_traversal']
+    xaxis = ['GET', 'List Traversal']
     ind = np.arange(2)
     
     # plt.style.use(matplotx.styles.pitaya_smoothie['light'])
@@ -387,7 +387,7 @@ if __name__ == "__main__":
     # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
-    # draw_facebook_social_specific()
+    draw_facebook_social_specific()
     # draw_arbiter_benefit()
     # draw_motivation_compute_emulate()
-    draw_motivation_cache_cold()
+    # draw_motivation_cache_cold()
