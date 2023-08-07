@@ -100,7 +100,7 @@ def draw_motivation_compute_emulate():
     plt.show()
     
 def draw_motivation_cache_cold():
-    plt.rc('font', size=16)
+    plt.rc('font', size=20)
     # List traversal
     df = pd.read_csv('../data-archive/NDPFaas/cache_cold/0730-overall/exec_latency.csv')
     p_df = pd.read_csv('../data-archive/NDPFaas/cache_cold/0731-pocketfix/exec_latency.csv')
@@ -112,7 +112,7 @@ def draw_motivation_cache_cold():
     cold_df['MEDIAN'] -= 0.6    # Fix gap between anna & shredder
     
     single_access_latency = cold_df['MEDIAN'][0]
-    plt.axhline(y=single_access_latency, linestyle='--', color='black', label='Storage Access Latency')
+    plt.axhline(y=single_access_latency, linestyle='--', color='black', label='Storage Access\nLatency')
     
     plt.plot(xaxis, np.array(cold_df['MEDIAN']), label='Remote Storage', color=color_theme_sub['arbiter'], marker='o')
     pocket_df = p_df[p_df['ARGS'].str.startswith('pocket')][:-1]
@@ -387,7 +387,7 @@ if __name__ == "__main__":
     # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
-    draw_facebook_social_specific()
+    # draw_facebook_social_specific()
     # draw_arbiter_benefit()
     # draw_motivation_compute_emulate()
-    # draw_motivation_cache_cold()
+    draw_motivation_cache_cold()
