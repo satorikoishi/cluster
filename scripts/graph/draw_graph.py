@@ -91,7 +91,7 @@ def draw_motivation_compute_emulate():
     load_8_df = load_df.iloc[0:5]
     load_4_df = load_df.iloc[5:10]
     plt.plot(xaxis, np.array(load_4_df['MEDIAN']), label='Storage Side (Load 4)', color=color_theme['anna'], marker='*')
-    plt.plot(xaxis, np.array(load_8_df['MEDIAN']), label='Function Side (Load 8)', color=color_theme['pocket'], marker='s')
+    plt.plot(xaxis, np.array(load_8_df['MEDIAN']), label='Storage Side (Load 8)', color=color_theme['pocket'], marker='s')
     plt.legend()
     plt.xlabel('Dependent Accesses Times')
     plt.ylabel('Median Latency (ms)')
