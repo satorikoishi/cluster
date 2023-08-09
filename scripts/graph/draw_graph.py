@@ -78,6 +78,7 @@ def draw_list_traversal(csv_name):
     plt.show()
 
 def draw_motivation_compute_emulate():
+    plt.rc('font', size=16)
     df = pd.read_csv("../data-archive/NDPFaas/motivation_compute_emulate/2023-0807-cache-storage/exec_latency.csv")
     load_df = pd.read_csv("../data-archive/NDPFaas/motivation_compute_emulate/2023-0807-storage-load/exec_latency.csv")
     # duration = 0
@@ -123,10 +124,12 @@ def draw_motivation_cache_cold():
     handles, labels = plt.gca().get_legend_handles_labels()
     # print(handles, labels)
     order = [1, 2, 3, 0]
-    plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order])
+    plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order], fontsize=19)
     plt.ylim(0,)
     plt.xlabel('Depth')
     plt.ylabel('Median Latency (ms)')
+    # plt.grid(axis='y')
+    # plt.gca().set_axisbelow(True)
     plt.savefig(f'{prefix_mo_savefig}cache_cold.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
     
@@ -146,6 +149,8 @@ def draw_motivation_cache_cold():
     # plt.yscale('log')
     plt.xlabel('K')
     plt.ylabel('Median Latency (ms)')
+    # plt.grid(axis='y')
+    # plt.gca().set_axisbelow(True)
     plt.savefig(f'{prefix_mo_savefig}cache_cold_k_hop.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
 
@@ -387,7 +392,7 @@ if __name__ == "__main__":
     # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
-    draw_facebook_social_specific()
+    # draw_facebook_social_specific()
     # draw_arbiter_benefit()
     # draw_motivation_compute_emulate()
-    # draw_motivation_cache_cold()
+    draw_motivation_cache_cold()
