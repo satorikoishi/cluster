@@ -178,9 +178,13 @@ def draw_compute_emulate():
                 
             lat_median = c_df['MEDIAN']
             lat_median['avg'] = lat_median.mean()
-            print(f'Duration: {duration}, Depth: {depth}, Median DF: {lat_median}')
+            # lat_p99 = c_df['P99']
+            # lat_p99['avg'] = lat_p99.mean()
+            # err_bar = [lat_median - lat_median, lat_p99 - lat_median]
+            # print(f'Duration: {duration}, Depth: {depth}, Median DF: {lat_median}, P99 DF: {lat_p99}, ERRBAR: {err_bar}')
             
-            bar = plt.bar(ind + gap * wi, lat_median, width, label=label_map[c], color=color_theme[c])
+            plt.bar(ind + gap * wi, lat_median, width, label=label_map[c], color=color_theme[c])
+            # plt.errorbar(ind + gap * wi, np.array(lat_median), np.array(err_bar))
             # plt.bar_label(bar, fmt='%.1f', fontsize=8)
             # Heavy load
             if i == 2:
@@ -313,6 +317,7 @@ def draw_facebook_social_specific():
     plt.legend()
     plt.ylabel("Median Latency (ms)")
     plt.xticks([r + 1.5 * gap for r in np.arange(2)], xaxis)
+    plt.xlabel(" ")
     plt.ylim(0, 3)
     plt.savefig(f'{prefix_savefig}facebook_social_bar.png',bbox_inches='tight',pad_inches = 0.02)
     plt.show()
@@ -392,7 +397,7 @@ if __name__ == "__main__":
     # draw_compute_emulate()
     # draw_facebook_social_bar_all()
     # draw_facebook_social_scatter_all()
-    # draw_facebook_social_specific()
+    draw_facebook_social_specific()
     # draw_arbiter_benefit()
     # draw_motivation_compute_emulate()
-    draw_motivation_cache_cold()
+    # draw_motivation_cache_cold()
