@@ -70,6 +70,13 @@ Under `~/cluster/` directory:
 ./scripts/run_benchmark.sh {workload}:{num requests}:{args}
 ```
 
+Batch scripts
+
+```shell
+./scripts/run_benchmark.sh compute_emulate:1:create
+./scripts/bench/run_compute_emulate.py asrp
+```
+
 ## Inspect logs
 
 ### Use scripts
