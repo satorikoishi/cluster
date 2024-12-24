@@ -93,3 +93,8 @@ sudo apt-mark hold kubelet kubeadm kubectl
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 echo "alias k=kubectl" >> ~/.bashrc
 echo "complete -o default -F __start_kubectl k" >> ~/.bashrc
+
+# fix error
+sudo modprobe br_netfilter
+echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-iptables
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
