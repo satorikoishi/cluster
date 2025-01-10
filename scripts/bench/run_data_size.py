@@ -5,7 +5,7 @@ import utils
 
 ## Example: ./scripts/bench/run_data_size.py ap
 
-num_requests = 1000
+num_requests = 100
 access_count_arr = [0,1,2,4,8]
 data_size_arr = [8, 1024, 1024 * 10, 1024 * 100, 1024 * 1024]
 duration_arr = [0]
