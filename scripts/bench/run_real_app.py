@@ -13,7 +13,7 @@ def run_batch(bench_name, clients):
     print(f'Test clients: {clients}')
     
     for app_name in app_list:
-        subprocess.run(f'{func_cmd}:1:create', shell=True)
+        subprocess.run(f'{func_cmd}:1:create:{app_name}', shell=True)
         for client_name in clients:
             cmd = f'{func_cmd}:{num_requests}:{client_name}:{app_name}'
             print(f'{cmd}')
