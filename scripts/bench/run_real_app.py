@@ -6,7 +6,7 @@ import utils
 ## Example: ./scripts/bench/run_real_app.py ap
 
 num_requests = 1000
-app_list = ['auth', 'calc-avg', 'k-hop', 'file-replicator', 'list-traversal', 'user-follow']
+app_list = ['auth', 'calc_avg', 'k_hop', 'file_replicator', 'list_traversal', 'user_follow']
 
 def run_batch(bench_name, clients):
     func_cmd = f'./scripts/run_benchmark.sh {bench_name}'
